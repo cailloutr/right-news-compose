@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -29,6 +28,7 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.cailloutr.rightnewscompose.model.Article
 import com.cailloutr.rightnewscompose.model.Banner
 import com.cailloutr.rightnewscompose.model.ChipItem
@@ -38,6 +38,37 @@ import com.cailloutr.rightnewscompose.ui.SearchBar
 import com.cailloutr.rightnewscompose.ui.SectionChipGroup
 import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
 
+
+@Composable
+fun MainScreen(
+    modifier: Modifier = Modifier
+) {
+
+    val bannerState by remember {
+        mutableStateOf<List<Banner>>(listOf())
+    }
+
+    val sectionNewsState by remember {
+        mutableStateOf<List<Article>>(listOf())
+    }
+
+    val mainSectionsState by remember {
+        mutableStateOf<List<ChipItem>>(listOf())
+    }
+
+    val isRefreshingSectionsNewsState by remember {
+        mutableStateOf(false)
+    }
+
+    MainScreen(
+        bannerState = bannerState,
+        sectionNewsState = sectionNewsState,
+        mainSectionsState = mainSectionsState,
+        isRefreshingSectionsNewsState = isRefreshingSectionsNewsState,
+        modifier = modifier
+    )
+}
+
 @Composable
 fun MainScreen(
     bannerState: List<Banner>,
@@ -45,20 +76,18 @@ fun MainScreen(
     mainSectionsState: List<ChipItem>,
     isRefreshingSectionsNewsState: Boolean,
     modifier: Modifier = Modifier,
-) {
-    val selectedSection by remember {
-        mutableStateOf(mainSectionsState[0].id)
-    }
+    selectedSection: String = ""
 
+) {
     LazyColumn(
         modifier = modifier
-            .fillMaxSize()
             .padding(16.dp)
     ) {
         item {
             SearchBar(
                 onValueChange = {},
-                onSearch = {}
+                onSearch = {},
+                enabled = false
             )
             Spacer(modifier = Modifier.size(16.dp))
             Row(
@@ -177,13 +206,14 @@ fun MainScreenPreview() {
             }
         )
     }
+    val navControler = rememberNavController()
     RightNewsComposeTheme {
         Surface {
             MainScreen(
                 bannerState = bannerList,
                 mainSectionsState = sectionsList,
                 sectionNewsState = articles,
-                isRefreshingSectionsNewsState = false
+                isRefreshingSectionsNewsState = false,
             )
         }
     }
@@ -209,6 +239,7 @@ fun DarkMainScreenPreview() {
             }
         )
     }
+    val navController = rememberNavController()
     val articles by remember {
         mutableStateOf(
             List(10) {
@@ -238,7 +269,7 @@ fun DarkMainScreenPreview() {
                 bannerState = bannerList,
                 mainSectionsState = sectionsList,
                 sectionNewsState = articles,
-                isRefreshingSectionsNewsState = false
+                isRefreshingSectionsNewsState = false,
             )
         }
     }

@@ -26,10 +26,12 @@ import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
 fun SearchBar(
     modifier: Modifier = Modifier,
     text: String = "",
+    enabled: Boolean,
     onValueChange: (String) -> Unit,
     onSearch: (String) -> Unit,
 ) {
     OutlinedTextField(
+        enabled = enabled,
         value = text,
         onValueChange = { newValue -> onValueChange(newValue) },
         leadingIcon = {
@@ -70,7 +72,8 @@ fun SearchBarPreview() {
                 modifier = Modifier,
                 text = "",
                 onValueChange = {},
-                onSearch = {}
+                onSearch = {},
+                enabled = true
             )
         }
     }
@@ -85,7 +88,8 @@ fun DarkSearchBarPreview() {
                 modifier = Modifier,
                 text = "",
                 onValueChange = {},
-                onSearch = {}
+                onSearch = {},
+                enabled = true
             )
         }
     }
