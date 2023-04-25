@@ -3,6 +3,7 @@ package com.cailloutr.rightnewscompose.data.local.roommodel
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.cailloutr.rightnewscompose.model.Article
 
 @Entity(tableName = "articles")
 data class RoomArticle(
@@ -34,4 +35,22 @@ data class RoomArticle(
     val body: String?,
     @ColumnInfo(name = "container_id")
     val containerId: String,
+)
+
+fun RoomArticle.toArticle() = Article(
+    id = id,
+    type = type,
+    sectionId = sectionId,
+    sectionName = sectionName,
+    webPublicationDate = webPublicationDate,
+    webTitle = webTitle,
+    webUrl = webUrl,
+    apiUrl = apiUrl,
+    isHosted = isHosted,
+    pillarId = pillarId,
+    pillarName = pillarName,
+    trailText = trailText,
+    thumbnail = thumbnail,
+    headline = headline,
+    body = body
 )
