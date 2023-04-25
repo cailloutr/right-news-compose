@@ -1,7 +1,8 @@
-package com.cailloutr.rightnewscompose
+package com.cailloutr.rightnewscompose.navigation
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import com.cailloutr.rightnewscompose.R
 
 sealed class HomeScreens(
     val route: String,

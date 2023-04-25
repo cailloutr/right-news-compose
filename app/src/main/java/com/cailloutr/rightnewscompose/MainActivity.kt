@@ -3,7 +3,7 @@ package com.cailloutr.rightnewscompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.cailloutr.rightnewscompose.navigation.RootNavGraph
+import com.cailloutr.rightnewscompose.ui.RightNewsApp
 import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -11,7 +11,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             RightNewsComposeTheme {
-                RootNavGraph()
+                RightNewsApp()
             }
         }
     }

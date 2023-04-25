@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.cailloutr.rightnewscompose.HomeScreens
 import com.cailloutr.rightnewscompose.ui.screens.MainScreen
 
 @Composable
