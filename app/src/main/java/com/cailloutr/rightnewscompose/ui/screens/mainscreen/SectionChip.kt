@@ -1,4 +1,4 @@
-package com.cailloutr.rightnewscompose.ui
+package com.cailloutr.rightnewscompose.ui.screens.mainscreen
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.horizontalScroll

@@ -1,10 +1,12 @@
-package com.cailloutr.rightnewscompose.ui
+package com.cailloutr.rightnewscompose.ui.screens.mainscreen
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerDefaults
+import androidx.compose.foundation.pager.PagerSnapDistance
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,9 +33,17 @@ fun BannerHorizontalPager(
     modifier: Modifier = Modifier,
 ) {
     val pagerState = rememberPagerState()
+    val fling = PagerDefaults.flingBehavior(
+        state = pagerState,
+        pagerSnapDistance = PagerSnapDistance.atMost(10)
+    )
+
     Column(modifier = modifier) {
         HorizontalPager(
             pageCount = bannerList.size,
+            pageSpacing = 16.dp,
+            state = pagerState,
+            flingBehavior = fling
         ) { page ->
             NewsBannerCard(
                 title = bannerList[page].title,

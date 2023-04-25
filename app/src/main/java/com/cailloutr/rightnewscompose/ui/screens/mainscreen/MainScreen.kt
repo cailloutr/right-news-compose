@@ -1,4 +1,4 @@
-package com.cailloutr.rightnewscompose.ui.screens
+package com.cailloutr.rightnewscompose.ui.screens.mainscreen
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.clickable
@@ -19,6 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,43 +29,30 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cailloutr.rightnewscompose.model.Article
 import com.cailloutr.rightnewscompose.model.Banner
 import com.cailloutr.rightnewscompose.model.ChipItem
-import com.cailloutr.rightnewscompose.ui.BannerHorizontalPager
 import com.cailloutr.rightnewscompose.ui.NewsSectionsCard
-import com.cailloutr.rightnewscompose.ui.SearchBar
-import com.cailloutr.rightnewscompose.ui.SectionChipGroup
+import com.cailloutr.rightnewscompose.ui.components.SearchBar
 import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
+import com.cailloutr.rightnewscompose.ui.viewmodel.NewsViewModel
 
 
 @Composable
 fun MainScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: NewsViewModel = viewModel(),
 ) {
-
-    val bannerState by remember {
-        mutableStateOf<List<Banner>>(listOf())
-    }
-
-    val sectionNewsState by remember {
-        mutableStateOf<List<Article>>(listOf())
-    }
-
-    val mainSectionsState by remember {
-        mutableStateOf<List<ChipItem>>(listOf())
-    }
-
-    val isRefreshingSectionsNewsState by remember {
-        mutableStateOf(false)
-    }
-
     MainScreen(
-        bannerState = bannerState,
-        sectionNewsState = sectionNewsState,
-        mainSectionsState = mainSectionsState,
-        isRefreshingSectionsNewsState = isRefreshingSectionsNewsState,
+        bannerState = viewModel.bannerListState.collectAsState().value,
+        sectionNewsState = viewModel.articlesState.collectAsState().value,
+        mainSectionsState = viewModel.sectionsListState.collectAsState().value,
+        isRefreshingSectionsNewsState = viewModel.isRefreshingSectionsNewsState.collectAsState().value,
+        onItemSelectedListener = { id ->
+            viewModel.setSelectedSection(id)
+        },
+        selectedSection = viewModel.selectedSection.collectAsState().value,
         modifier = modifier
     )
 }
@@ -76,12 +64,13 @@ fun MainScreen(
     mainSectionsState: List<ChipItem>,
     isRefreshingSectionsNewsState: Boolean,
     modifier: Modifier = Modifier,
-    selectedSection: String = ""
-
+    selectedSection: String = "",
+    seeAllOnClick: () -> Unit = {},
+    onItemSelectedListener: (String) -> Unit = {},
 ) {
     LazyColumn(
         modifier = modifier
-            .padding(16.dp)
+            .padding(start = 16.dp, top = 16.dp, end = 16.dp)
     ) {
         item {
             SearchBar(
@@ -106,7 +95,7 @@ fun MainScreen(
                     modifier = Modifier
                         .align(Alignment.Bottom)
                         .clickable {
-                            TODO()
+                            seeAllOnClick()
                         }
                 ) {
                     Text(
@@ -136,7 +125,9 @@ fun MainScreen(
             SectionChipGroup(
                 list = mainSectionsState,
                 selectedSection = selectedSection,
-                onItemSelectedListener = {},
+                onItemSelectedListener = { id ->
+                    onItemSelectedListener(id)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .clipToBounds()
@@ -206,7 +197,6 @@ fun MainScreenPreview() {
             }
         )
     }
-    val navControler = rememberNavController()
     RightNewsComposeTheme {
         Surface {
             MainScreen(
@@ -239,7 +229,6 @@ fun DarkMainScreenPreview() {
             }
         )
     }
-    val navController = rememberNavController()
     val articles by remember {
         mutableStateOf(
             List(10) {

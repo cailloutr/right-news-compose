@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.cailloutr.rightnewscompose.ui.screens.MainScreen
+import com.cailloutr.rightnewscompose.ui.screens.mainscreen.MainScreen
 
 @Composable
 fun HomeNavGraph(navController: NavHostController) {

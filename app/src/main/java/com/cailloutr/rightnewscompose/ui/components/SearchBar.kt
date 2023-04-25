@@ -1,4 +1,4 @@
-package com.cailloutr.rightnewscompose.ui
+package com.cailloutr.rightnewscompose.ui.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,9 +11,9 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +30,7 @@ fun SearchBar(
     onValueChange: (String) -> Unit,
     onSearch: (String) -> Unit,
 ) {
+    val containerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
     OutlinedTextField(
         enabled = enabled,
         value = text,
@@ -37,12 +38,13 @@ fun SearchBar(
         leadingIcon = {
             Icon(imageVector = Icons.Default.Search, contentDescription = null)
         },
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            containerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = containerColor,
+            unfocusedContainerColor = containerColor,
+            disabledContainerColor = containerColor,
             focusedBorderColor = Color.Transparent,
             unfocusedBorderColor = Color.Transparent,
-            disabledBorderColor = Color.Transparent
-
+            disabledBorderColor = Color.Transparent,
         ),
         shape = RoundedCornerShape(24.dp),
         placeholder = {
