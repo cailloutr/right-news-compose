@@ -1,6 +1,8 @@
 package com.cailloutr.rightnewscompose.ui.screens.mainscreen
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,12 +35,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.cailloutr.rightnewscompose.data.local.roommodel.toChipItem
 import com.cailloutr.rightnewscompose.model.Article
 import com.cailloutr.rightnewscompose.model.ChipItem
-import com.cailloutr.rightnewscompose.ui.NewsSectionsCard
 import com.cailloutr.rightnewscompose.ui.components.SearchBar
 import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
 import com.cailloutr.rightnewscompose.ui.viewmodel.NewsViewModel
+import com.cailloutr.rightnewscompose.util.DateUtil
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
@@ -46,24 +49,26 @@ fun MainScreen(
 ) {
 
     val latestNewsState by viewModel.latestNewsState.collectAsState()
-    val articlesState by viewModel.articlesState.collectAsState()
+    val sectionsArticlesState by viewModel.sectionsArticlesState.collectAsState()
     val sectionsListState by viewModel.sectionsListState.collectAsState()
     val isRefreshingSectionsNewsState by viewModel.isRefreshingSectionsNewsState.collectAsState()
-    val selectedSection by viewModel.selectedSection.collectAsState()
+    val selectedSection by viewModel.selectedSectionState.collectAsState()
 
     MainScreen(
         latestNewsState = latestNewsState?.results ?: listOf(),
-        sectionNewsState = articlesState,
+        sectionNewsState = sectionsArticlesState?.results ?: listOf(),
         mainSectionsState = sectionsListState.map { it.toChipItem() },
         isRefreshingSectionsNewsState = isRefreshingSectionsNewsState,
         onItemSelectedListener = { id ->
             viewModel.setSelectedSection(id)
+            viewModel.getNewsBySection {  }
         },
         selectedSection = selectedSection,
         modifier = modifier
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen(
     latestNewsState: List<Article>,
@@ -155,12 +160,13 @@ fun MainScreen(
                 title = article.webTitle,
                 trailText = article.trailText!!,
                 backgroundImageUrl = article.thumbnail!!,
-                date = article.webPublicationDate
+                date = DateUtil.getFormattedDate(article.webPublicationDate)
             )
         }
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
@@ -232,6 +238,7 @@ fun MainScreenPreview() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun DarkMainScreenPreview() {

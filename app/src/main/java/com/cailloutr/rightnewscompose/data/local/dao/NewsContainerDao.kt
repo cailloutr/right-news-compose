@@ -18,7 +18,7 @@ interface NewsContainerDao {
     suspend fun deleteNewsContainer(vararg newsContainer: RoomNewsContainer)
 
     @Query("SELECT * FROM news_container WHERE id == :section")
-    fun getNewsContainer(section: String): Flow<RoomNewsContainer>
+    fun getNewsContainer(section: String): Flow<RoomNewsContainer?>
 
     @Query("SELECT * FROM news_container")
     fun getAllNewsContainer(): Flow<List<RoomNewsContainer>>

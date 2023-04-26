@@ -41,20 +41,18 @@ class NewsRepository @Inject constructor(
                 roomNewsContainer?.let {
                     database.articleDao.getAllArticlesFromSection(section.sectionName)
                         .collectLatest { roomArticleList ->
-                            roomArticleList?.let {
-                                send(
-                                    NewsContainer(
-                                        id = roomNewsContainer.id,
-                                        total = roomNewsContainer.total,
-                                        startIndex = roomNewsContainer.startIndex,
-                                        pageSize = roomNewsContainer.pageSize,
-                                        currentPage = roomNewsContainer.currentPage,
-                                        pages = roomNewsContainer.pages,
-                                        orderBy = roomNewsContainer.orderBy,
-                                        results = roomArticleList.map { it.toArticle() }
-                                    )
+                            send(
+                                NewsContainer(
+                                    id = roomNewsContainer.id,
+                                    total = roomNewsContainer.total,
+                                    startIndex = roomNewsContainer.startIndex,
+                                    pageSize = roomNewsContainer.pageSize,
+                                    currentPage = roomNewsContainer.currentPage,
+                                    pages = roomNewsContainer.pages,
+                                    orderBy = roomNewsContainer.orderBy,
+                                    results = roomArticleList.map { it.toArticle() }
                                 )
-                            }
+                            )
                         }
                 }
             }
