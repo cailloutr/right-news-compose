@@ -3,6 +3,7 @@ package com.cailloutr.rightnewscompose.data.local.roommodel
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.cailloutr.rightnewscompose.model.ChipItem
 
 @Entity(tableName = "section")
 data class RoomSection(
@@ -14,4 +15,9 @@ data class RoomSection(
     @ColumnInfo(name = "api_url")
     val apiUrl: String,
     val code: String
+)
+
+fun RoomSection.toChipItem() = ChipItem(
+    id = id,
+    text = title
 )

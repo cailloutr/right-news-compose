@@ -23,13 +23,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.cailloutr.rightnewscompose.model.Banner
+import com.cailloutr.rightnewscompose.model.Article
+import com.cailloutr.rightnewscompose.ui.components.HtmlText
 import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BannerHorizontalPager(
-    bannerList: List<Banner>,
+    articleList: List<Article>,
     modifier: Modifier = Modifier,
 ) {
     val pagerState = rememberPagerState()
@@ -40,15 +41,15 @@ fun BannerHorizontalPager(
 
     Column(modifier = modifier) {
         HorizontalPager(
-            pageCount = bannerList.size,
+            pageCount = articleList.size,
             pageSpacing = 16.dp,
             state = pagerState,
             flingBehavior = fling
         ) { page ->
             NewsBannerCard(
-                title = bannerList[page].title,
-                trailText = bannerList[page].description,
-                backgroundImageUrl = bannerList[page].image
+                title = articleList[page].webTitle,
+                trailText = articleList[page].trailText.toString(),
+                backgroundImageUrl = articleList[page].thumbnail.toString()
             )
         }
         Spacer(modifier = Modifier.size(8.dp))
@@ -59,7 +60,7 @@ fun BannerHorizontalPager(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.Bottom
         ) {
-            repeat(bannerList.size) { iteration ->
+            repeat(articleList.size) { iteration ->
                 val color = if (pagerState.currentPage == iteration)
                     MaterialTheme.colorScheme.primary
                 else
@@ -76,7 +77,6 @@ fun BannerHorizontalPager(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewsBannerCard(
     title: String,
@@ -135,14 +135,10 @@ fun NewsBannerCard(
                         modifier = Modifier
                             .fillMaxWidth()
                     ) {
-                        Text(
+                        HtmlText(
                             text = trailText,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier
-                                .padding(start = 8.dp)
+                            textColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                            modifier = Modifier.padding(start = 8.dp).fillMaxWidth()
                         )
                     }
                 }
@@ -185,8 +181,24 @@ fun BannerHorizontalPagerPreview() {
     RightNewsComposeTheme {
         Surface {
             BannerHorizontalPager(
-                bannerList = List(5) {
-                    Banner(it.toLong(), it.toString(), it.toString(), it.toString())
+                articleList = List(5) {
+                    Article(
+                        id = it.toString(),
+                        type = it.toString(),
+                        sectionId = it.toString(),
+                        sectionName = it.toString(),
+                        webPublicationDate = it.toString(),
+                        webTitle = it.toString(),
+                        webUrl = it.toString(),
+                        apiUrl = it.toString(),
+                        isHosted = false,
+                        pillarId = it.toString(),
+                        trailText = it.toString(),
+                        pillarName = it.toString(),
+                        thumbnail = it.toString(),
+                        headline = it.toString(),
+                        body = it.toString(),
+                    )
                 }
             )
         }
@@ -199,8 +211,24 @@ fun DarkBannerHorizontalPagerPreview() {
     RightNewsComposeTheme {
         Surface {
             BannerHorizontalPager(
-                bannerList = List(5) {
-                    Banner(it.toLong(), it.toString(), it.toString(), it.toString())
+                articleList = List(5) {
+                    Article(
+                        id = it.toString(),
+                        type = it.toString(),
+                        sectionId = it.toString(),
+                        sectionName = it.toString(),
+                        webPublicationDate = it.toString(),
+                        webTitle = it.toString(),
+                        webUrl = it.toString(),
+                        apiUrl = it.toString(),
+                        isHosted = false,
+                        pillarId = it.toString(),
+                        trailText = it.toString(),
+                        pillarName = it.toString(),
+                        thumbnail = it.toString(),
+                        headline = it.toString(),
+                        body = it.toString(),
+                    )
                 }
             )
         }

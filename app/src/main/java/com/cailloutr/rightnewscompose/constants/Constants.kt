@@ -8,4 +8,19 @@ object Constants {
 
     const val ROOM_NEWS_CONTAINER_DEFAULT_SECTION = "article"
 
+    const val API_CALL_FIELDS = "trailText,thumbnail,headline,body"
+
+    const val LATEST_NEWS = "latest_news"
+
+    val DEFAULT_SECTIONS = listOf(
+        "games",
+        "sport",
+        "tech",
+        "books",
+        "world-news",
+        "politics",
+        "culture",
+        "education"
+    )
+
 }

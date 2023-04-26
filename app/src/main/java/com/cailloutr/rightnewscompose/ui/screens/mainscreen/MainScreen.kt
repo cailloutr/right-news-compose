@@ -29,9 +29,9 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.cailloutr.rightnewscompose.data.local.roommodel.toChipItem
 import com.cailloutr.rightnewscompose.model.Article
-import com.cailloutr.rightnewscompose.model.Banner
 import com.cailloutr.rightnewscompose.model.ChipItem
 import com.cailloutr.rightnewscompose.ui.NewsSectionsCard
 import com.cailloutr.rightnewscompose.ui.components.SearchBar
@@ -42,24 +42,31 @@ import com.cailloutr.rightnewscompose.ui.viewmodel.NewsViewModel
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
-    viewModel: NewsViewModel = viewModel(),
+    viewModel: NewsViewModel = hiltViewModel(),
 ) {
+
+    val latestNewsState by viewModel.latestNewsState.collectAsState()
+    val articlesState by viewModel.articlesState.collectAsState()
+    val sectionsListState by viewModel.sectionsListState.collectAsState()
+    val isRefreshingSectionsNewsState by viewModel.isRefreshingSectionsNewsState.collectAsState()
+    val selectedSection by viewModel.selectedSection.collectAsState()
+
     MainScreen(
-        bannerState = viewModel.bannerListState.collectAsState().value,
-        sectionNewsState = viewModel.articlesState.collectAsState().value,
-        mainSectionsState = viewModel.sectionsListState.collectAsState().value,
-        isRefreshingSectionsNewsState = viewModel.isRefreshingSectionsNewsState.collectAsState().value,
+        latestNewsState = latestNewsState?.results ?: listOf(),
+        sectionNewsState = articlesState,
+        mainSectionsState = sectionsListState.map { it.toChipItem() },
+        isRefreshingSectionsNewsState = isRefreshingSectionsNewsState,
         onItemSelectedListener = { id ->
             viewModel.setSelectedSection(id)
         },
-        selectedSection = viewModel.selectedSection.collectAsState().value,
+        selectedSection = selectedSection,
         modifier = modifier
     )
 }
 
 @Composable
 fun MainScreen(
-    bannerState: List<Banner>,
+    latestNewsState: List<Article>,
     sectionNewsState: List<Article>,
     mainSectionsState: List<ChipItem>,
     isRefreshingSectionsNewsState: Boolean,
@@ -116,7 +123,7 @@ fun MainScreen(
             }
             Spacer(modifier = Modifier.size(16.dp))
             BannerHorizontalPager(
-                bannerList = bannerState,
+                articleList = latestNewsState,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(280.dp)
@@ -157,10 +164,26 @@ fun MainScreen(
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
-    val bannerList by remember {
+    val articleList by remember {
         mutableStateOf(
             List(5) {
-                Banner(it.toLong(), it.toString(), it.toString(), it.toString())
+                Article(
+                    id = it.toString(),
+                    type = it.toString(),
+                    sectionId = it.toString(),
+                    sectionName = it.toString(),
+                    webPublicationDate = it.toString(),
+                    webTitle = it.toString(),
+                    webUrl = it.toString(),
+                    apiUrl = it.toString(),
+                    isHosted = false,
+                    pillarId = it.toString(),
+                    trailText = it.toString(),
+                    pillarName = it.toString(),
+                    thumbnail = it.toString(),
+                    headline = it.toString(),
+                    body = it.toString(),
+                )
             }
         )
     }
@@ -200,9 +223,9 @@ fun MainScreenPreview() {
     RightNewsComposeTheme {
         Surface {
             MainScreen(
-                bannerState = bannerList,
-                mainSectionsState = sectionsList,
+                latestNewsState = articleList,
                 sectionNewsState = articles,
+                mainSectionsState = sectionsList,
                 isRefreshingSectionsNewsState = false,
             )
         }
@@ -212,10 +235,26 @@ fun MainScreenPreview() {
 @Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun DarkMainScreenPreview() {
-    val bannerList by remember {
+    val articleList by remember {
         mutableStateOf(
             List(5) {
-                Banner(it.toLong(), it.toString(), it.toString(), it.toString())
+                Article(
+                    id = it.toString(),
+                    type = it.toString(),
+                    sectionId = it.toString(),
+                    sectionName = it.toString(),
+                    webPublicationDate = it.toString(),
+                    webTitle = it.toString(),
+                    webUrl = it.toString(),
+                    apiUrl = it.toString(),
+                    isHosted = false,
+                    pillarId = it.toString(),
+                    trailText = it.toString(),
+                    pillarName = it.toString(),
+                    thumbnail = it.toString(),
+                    headline = it.toString(),
+                    body = it.toString(),
+                )
             }
         )
     }
@@ -255,9 +294,9 @@ fun DarkMainScreenPreview() {
     RightNewsComposeTheme {
         Surface {
             MainScreen(
-                bannerState = bannerList,
-                mainSectionsState = sectionsList,
+                latestNewsState = articleList,
                 sectionNewsState = articles,
+                mainSectionsState = sectionsList,
                 isRefreshingSectionsNewsState = false,
             )
         }

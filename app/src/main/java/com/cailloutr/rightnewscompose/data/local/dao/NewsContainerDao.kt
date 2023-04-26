@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 interface NewsContainerDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSection(vararg newsContainer: RoomNewsContainer)
+    suspend fun insert(vararg newsContainer: RoomNewsContainer)
 
     @Delete
     suspend fun deleteNewsContainer(vararg newsContainer: RoomNewsContainer)

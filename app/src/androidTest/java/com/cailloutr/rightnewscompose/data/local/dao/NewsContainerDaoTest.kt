@@ -53,7 +53,7 @@ class NewsContainerDaoTest {
 
     @Test
     fun test_insertSection() = runTest {
-        dao.insertSection(roomNewsContainerDao)
+        dao.insert(roomNewsContainerDao)
 
         val retrievedContainer = dao.getNewsContainer(ROOM_NEWS_CONTAINER_DEFAULT_SECTION).first()
 
@@ -62,7 +62,7 @@ class NewsContainerDaoTest {
 
     @Test
     fun test_deleteNewsContainer() = runTest {
-        dao.insertSection(roomNewsContainerDao)
+        dao.insert(roomNewsContainerDao)
 
         var retrievedContainer = dao.getAllNewsContainer().first()
 
@@ -77,7 +77,7 @@ class NewsContainerDaoTest {
 
     @Test
     fun test_getNewsContainer() = runTest {
-        dao.insertSection(roomNewsContainerDao)
+        dao.insert(roomNewsContainerDao)
 
         val retrievedContainer = dao.getNewsContainer(roomNewsContainerDao.id).first()
 
