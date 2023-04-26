@@ -122,8 +122,6 @@ class NewsRepository @Inject constructor(
                 }
             }
         }
-
         responseStatus(response)
     }
-
 }

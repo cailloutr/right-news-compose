@@ -14,6 +14,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cailloutr.rightnewscompose.model.ChipItem
@@ -65,7 +66,12 @@ fun SectionChip(
 ) {
     FilterChip(
         label = {
-            Text(text = text, modifier = Modifier)
+            Text(
+                text = text,
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+            )
         },
         selected = isChecked,
         onClick = { onClickItem(id) },

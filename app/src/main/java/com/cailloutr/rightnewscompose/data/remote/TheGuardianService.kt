@@ -14,12 +14,6 @@ interface TheGuardianService {
     ): Resource<NewsRoot>
 
 
-    suspend fun getNewsOrderedByDate(
-        orderBy: OrderBy,
-        fields: String,
-        page: Int
-    ): NewsRoot
-
     suspend fun searchNews(
         orderBy: OrderBy,
         fields: String,

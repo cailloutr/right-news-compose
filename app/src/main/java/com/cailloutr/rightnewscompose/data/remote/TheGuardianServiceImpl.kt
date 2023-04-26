@@ -44,14 +44,6 @@ class TheGuardianServiceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getNewsOrderedByDate(
-        orderBy: OrderBy,
-        fields: String,
-        page: Int,
-    ): NewsRoot {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun searchNews(
         orderBy: OrderBy,
         fields: String,

@@ -21,5 +21,5 @@ interface SectionDao {
     fun getAllSection(): Flow<List<RoomSection>>
 
     @Query("SELECT * FROM section WHERE id == :id")
-    fun getSection(id: String): Flow<RoomSection>
+    fun getSection(id: String): Flow<RoomSection?>
 }

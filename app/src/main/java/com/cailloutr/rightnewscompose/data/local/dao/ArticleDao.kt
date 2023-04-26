@@ -21,5 +21,5 @@ interface ArticleDao {
     fun getAllArticlesFromSection(section: String): Flow<List<RoomArticle>>
 
     @Query("SELECT * FROM articles WHERE id == :id")
-    fun getArticle(id: String): Flow<RoomArticle>
+    fun getArticle(id: String): Flow<RoomArticle?>
 }

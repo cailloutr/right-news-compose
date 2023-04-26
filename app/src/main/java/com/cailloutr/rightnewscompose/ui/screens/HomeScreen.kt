@@ -1,5 +1,7 @@
 package com.cailloutr.rightnewscompose.ui.screens
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,6 +22,7 @@ import com.cailloutr.rightnewscompose.navigation.HomeNavGraph
 import com.cailloutr.rightnewscompose.ui.components.RightNewsMainAppbar
 import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavHostController = rememberNavController()) {
@@ -45,6 +48,7 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun HomeScreenPreview() {

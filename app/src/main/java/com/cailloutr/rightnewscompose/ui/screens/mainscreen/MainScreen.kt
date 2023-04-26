@@ -160,7 +160,11 @@ fun MainScreen(
                 title = article.webTitle,
                 trailText = article.trailText!!,
                 backgroundImageUrl = article.thumbnail!!,
-                date = DateUtil.getFormattedDate(article.webPublicationDate)
+                date = try {
+                    DateUtil.getFormattedDate(article.webPublicationDate)
+                } catch (e: Exception) {
+                    article.webPublicationDate
+                }
             )
         }
     }
@@ -178,7 +182,7 @@ fun MainScreenPreview() {
                     type = it.toString(),
                     sectionId = it.toString(),
                     sectionName = it.toString(),
-                    webPublicationDate = it.toString(),
+                    webPublicationDate = "2023-04-26T14:23:37Z",
                     webTitle = it.toString(),
                     webUrl = it.toString(),
                     apiUrl = it.toString(),
@@ -211,7 +215,7 @@ fun MainScreenPreview() {
                     it.toString(),
                     it.toString(),
                     it.toString(),
-                    it.toString(),
+                    "2023-04-26T14:23:37Z",
                     it.toString(),
                     it.toString(),
                     it.toString(),
@@ -250,7 +254,7 @@ fun DarkMainScreenPreview() {
                     type = it.toString(),
                     sectionId = it.toString(),
                     sectionName = it.toString(),
-                    webPublicationDate = it.toString(),
+                    webPublicationDate = "2023-04-26T14:23:37Z",
                     webTitle = it.toString(),
                     webUrl = it.toString(),
                     apiUrl = it.toString(),
@@ -283,7 +287,7 @@ fun DarkMainScreenPreview() {
                     it.toString(),
                     it.toString(),
                     it.toString(),
-                    it.toString(),
+                    "2023-04-26T14:23:37Z",
                     it.toString(),
                     it.toString(),
                     it.toString(),
