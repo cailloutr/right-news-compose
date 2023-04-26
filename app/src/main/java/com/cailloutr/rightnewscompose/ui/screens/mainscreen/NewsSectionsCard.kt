@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -16,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
+import com.ireward.htmlcompose.HtmlText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -83,10 +85,12 @@ fun NewsSectionsCard(
                         color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
                         modifier = Modifier
                     ) {
-                        Text(
+                        HtmlText(
                             text = trailText,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
+                            style = TextStyle.Default.copy(
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                                fontWeight = FontWeight.Bold
+                            ),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier

@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,8 +25,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.cailloutr.rightnewscompose.model.Article
-import com.cailloutr.rightnewscompose.ui.components.HtmlText
 import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
+import com.ireward.htmlcompose.HtmlText
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -118,12 +119,12 @@ fun NewsBannerCard(
                     ) {
                         Text(
                             text = title,
-                            style = MaterialTheme.typography.headlineMedium,
+                            style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
                             maxLines = 3,
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier
-                                .padding(start = 8.dp)
+                                .padding(horizontal = 8.dp)
                         )
                     }
 
@@ -137,8 +138,14 @@ fun NewsBannerCard(
                     ) {
                         HtmlText(
                             text = trailText,
-                            textColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                            modifier = Modifier.padding(start = 8.dp).fillMaxWidth()
+                            style = TextStyle.Default.copy(
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                                fontWeight = FontWeight.Bold
+                            ),
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp)
                         )
                     }
                 }
