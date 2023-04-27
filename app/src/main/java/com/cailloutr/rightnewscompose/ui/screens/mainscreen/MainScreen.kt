@@ -21,7 +21,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,9 +31,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.cailloutr.rightnewscompose.data.local.roommodel.toChipItem
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cailloutr.rightnewscompose.model.Article
 import com.cailloutr.rightnewscompose.model.ChipItem
+import com.cailloutr.rightnewscompose.model.toChipItem
 import com.cailloutr.rightnewscompose.ui.components.SearchBar
 import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
 import com.cailloutr.rightnewscompose.ui.viewmodel.NewsViewModel
@@ -47,23 +47,18 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     viewModel: NewsViewModel = hiltViewModel(),
 ) {
-
-    val latestNewsState by viewModel.latestNewsState.collectAsState()
-    val sectionsArticlesState by viewModel.sectionsArticlesState.collectAsState()
-    val sectionsListState by viewModel.sectionsListState.collectAsState()
-    val isRefreshingSectionsNewsState by viewModel.isRefreshingSectionsNewsState.collectAsState()
-    val selectedSection by viewModel.selectedSectionState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     MainScreen(
-        latestNewsState = latestNewsState?.results ?: listOf(),
-        sectionNewsState = sectionsArticlesState?.results ?: listOf(),
-        mainSectionsState = sectionsListState.map { it.toChipItem() },
-        isRefreshingSectionsNewsState = isRefreshingSectionsNewsState,
+        latestNewsState = uiState.latestNews?.results ?: listOf(),
+        sectionNewsState = uiState.sectionArticles?.results ?: listOf(),
+        mainSectionsState = uiState.sections.map { it.toChipItem() },
+        isRefreshingSectionsNewsState = uiState.isRefreshing,
         onItemSelectedListener = { id ->
             viewModel.setSelectedSection(id)
             viewModel.getNewsBySection {  }
         },
-        selectedSection = selectedSection,
+        selectedSection = uiState.selectedSection,
         modifier = modifier
     )
 }

@@ -7,3 +7,9 @@ data class Section(
     val apiUrl: String,
     val code: String
 )
+
+fun Section.toChipItem() =
+    ChipItem(
+        id = id,
+        text = title
+    )

@@ -5,19 +5,21 @@ import androidx.lifecycle.viewModelScope
 import com.cailloutr.rightnewscompose.constants.Constants.DEFAULT_SECTIONS
 import com.cailloutr.rightnewscompose.constants.Constants.FIRST_SECTIONS_ID
 import com.cailloutr.rightnewscompose.constants.Constants.LATEST_NEWS
-import com.cailloutr.rightnewscompose.data.local.roommodel.RoomSection
+import com.cailloutr.rightnewscompose.data.local.roommodel.toSection
 import com.cailloutr.rightnewscompose.data.remote.responses.news.NewsRoot
 import com.cailloutr.rightnewscompose.data.remote.responses.sections.SectionsRoot
 import com.cailloutr.rightnewscompose.model.NewsContainer
+import com.cailloutr.rightnewscompose.model.Section
 import com.cailloutr.rightnewscompose.model.SectionWrapper
 import com.cailloutr.rightnewscompose.other.DispatchersProvider
 import com.cailloutr.rightnewscompose.other.Resource
 import com.cailloutr.rightnewscompose.usecases.NewsUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,60 +29,66 @@ class NewsViewModel @Inject constructor(
     private val newsUseCases: NewsUseCases,
 ) : ViewModel() {
 
-    private val _sectionsListState = MutableStateFlow<List<RoomSection>>(listOf())
-    val sectionsListState: StateFlow<List<RoomSection>> = _sectionsListState.asStateFlow()
 
-    private val _latestNewsState = MutableStateFlow<NewsContainer?>(null)
-
-    val latestNewsState: StateFlow<NewsContainer?> = _latestNewsState.asStateFlow()
-    private val _sectionArticlesState = MutableStateFlow<NewsContainer?>(null)
-
-    val sectionsArticlesState: StateFlow<NewsContainer?> = _sectionArticlesState.asStateFlow()
-    private val _isRefreshingSectionsNewsState = MutableStateFlow(false)
-
-    val isRefreshingSectionsNewsState: StateFlow<Boolean> =
-        _isRefreshingSectionsNewsState.asStateFlow()
-
-    private val _selectedSectionState = MutableStateFlow(FIRST_SECTIONS_ID)
-    val selectedSectionState: StateFlow<String> = _selectedSectionState.asStateFlow()
+    private val _uiState =
+        MutableStateFlow<MainScreenUiState>(MainScreenUiState())
+    val uiState: StateFlow<MainScreenUiState>
+        get() = _uiState
 
     init {
-        fetchDataFromApi()
+        refreshData()
     }
 
-    fun fetchDataFromApi(responseStatus: (Resource<Exception>) -> Unit = {}) {
+    fun refreshData(responseStatus: (Resource<Exception>) -> Unit = {}) {
         getSectionsFilteredById(DEFAULT_SECTIONS) {}
         getLatestNews(SectionWrapper(sectionName = LATEST_NEWS, value = "")) {}
         getNewsBySection {}
+        setSelectedSection(FIRST_SECTIONS_ID)
     }
 
     fun setSelectedSection(id: String) {
-        _selectedSectionState.value = id
+        _uiState.update {
+            it.copy(
+                selectedSection = id
+            )
+        }
     }
 
     fun getLatestNews(section: SectionWrapper, responseStatus: (Resource<NewsRoot?>) -> Unit) {
         viewModelScope.launch(dispatchers.main) {
-            _latestNewsState.emit(
-                newsUseCases.getNewsBySectionUseCase(dispatchers.io, section, responseStatus)
-                    .first()
-            )
+            _uiState.update {
+                it.copy(
+                    latestNews = newsUseCases.getNewsBySectionUseCase(
+                        dispatchers.io,
+                        section,
+                        responseStatus
+                    ).first()
+                )
+            }
         }
     }
 
     fun getNewsBySection(responseStatus: (Resource<NewsRoot?>) -> Unit) {
         viewModelScope.launch(dispatchers.main) {
             val selectedSection = SectionWrapper(
-                sectionName = selectedSectionState.value,
-                value = selectedSectionState.value
+                sectionName = _uiState.value.selectedSection,
+                value = _uiState.value.selectedSection
             )
             if (selectedSection.sectionName.isNotEmpty()) {
-                _sectionArticlesState.emit(
-                    newsUseCases.getNewsBySectionUseCase(
-                        dispatchers.io,
-                        selectedSection,
-                        responseStatus
-                    ).first()
-                )
+                _uiState.update {
+                    it.copy(isRefreshing = true)
+                }
+                delay(1000)
+                _uiState.update {
+                    it.copy(
+                        sectionArticles = newsUseCases.getNewsBySectionUseCase(
+                            dispatchers.io,
+                            selectedSection,
+                            responseStatus
+                        ).first(),
+                        isRefreshing = false
+                    )
+                }
             }
         }
     }
@@ -97,9 +105,19 @@ class NewsViewModel @Inject constructor(
             } else {
                 newsUseCases.getSectionsUseCase(dispatchers.io, responseStatus).first()
             }
-            _sectionsListState.emit(sectionsList)
+            _uiState.update {
+                it.copy(
+                    sections = sectionsList.map { it.toSection() }
+                )
+            }
         }
     }
-
-
 }
+
+data class MainScreenUiState(
+    var sections: List<Section> = listOf(),
+    var latestNews: NewsContainer? = null,
+    var sectionArticles: NewsContainer? = null,
+    var isRefreshing: Boolean = false,
+    var selectedSection: String = FIRST_SECTIONS_ID,
+)
