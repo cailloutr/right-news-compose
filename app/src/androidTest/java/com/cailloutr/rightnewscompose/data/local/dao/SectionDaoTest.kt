@@ -79,6 +79,6 @@ class SectionDaoTest {
 
         val retrievedContainer = dao.getSection(roomSection.id).first()
 
-        Truth.assertThat(retrievedContainer.id).isEqualTo(roomSection.id)
+        Truth.assertThat(retrievedContainer?.id).isEqualTo(roomSection.id)
     }
 }

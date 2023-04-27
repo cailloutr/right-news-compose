@@ -98,6 +98,6 @@ class ArticleDaoTest {
 
         val retrieveArticles = dao.getArticle(article.id).first()
 
-        assertThat(retrieveArticles.id).isEqualTo(article.id)
+        assertThat(retrieveArticles?.id).isEqualTo(article.id)
     }
 }

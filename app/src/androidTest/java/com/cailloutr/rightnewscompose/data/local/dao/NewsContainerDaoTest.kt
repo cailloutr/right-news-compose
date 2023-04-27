@@ -81,6 +81,6 @@ class NewsContainerDaoTest {
 
         val retrievedContainer = dao.getNewsContainer(roomNewsContainerDao.id).first()
 
-        assertThat(retrievedContainer.id).isEqualTo(roomNewsContainerDao.id)
+        assertThat(retrievedContainer?.id).isEqualTo(roomNewsContainerDao.id)
     }
 }

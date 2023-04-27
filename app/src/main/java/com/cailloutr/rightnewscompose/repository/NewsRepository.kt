@@ -4,7 +4,7 @@ import com.cailloutr.rightnewscompose.data.local.NewsDatabase
 import com.cailloutr.rightnewscompose.data.local.roommodel.RoomArticle
 import com.cailloutr.rightnewscompose.data.local.roommodel.RoomSection
 import com.cailloutr.rightnewscompose.data.local.roommodel.toArticle
-import com.cailloutr.rightnewscompose.data.remote.TheGuardianServiceImpl
+import com.cailloutr.rightnewscompose.data.remote.TheGuardianService
 import com.cailloutr.rightnewscompose.data.remote.responses.news.NewsRoot
 import com.cailloutr.rightnewscompose.data.remote.responses.news.toRoomArticle
 import com.cailloutr.rightnewscompose.data.remote.responses.news.toRoomNewsContainer
@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 class NewsRepository @Inject constructor(
     private val database: NewsDatabase,
-    private val serviceImpl: TheGuardianServiceImpl,
+    private val serviceImpl: TheGuardianService,
 ) : NewsRepositoryInterface {
 
     override fun getAllSections(): Flow<List<RoomSection>> {
