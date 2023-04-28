@@ -1,6 +1,9 @@
 package com.cailloutr.rightnewscompose.ui.screens.mainscreen
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -64,6 +67,28 @@ fun SectionChip(
     isChecked: Boolean = false,
     onClickItem: (String) -> Unit,
 ) {
+
+    val onPrimary = MaterialTheme.colorScheme.onPrimary
+    val primary = MaterialTheme.colorScheme.primary
+    val surface = MaterialTheme.colorScheme.onPrimary
+    val onSurface = MaterialTheme.colorScheme.onSurface
+
+    val selectedContainer by animateColorAsState(
+        targetValue = if (isChecked) primary else surface,
+        animationSpec = tween(
+            durationMillis = 300,
+            easing = LinearOutSlowInEasing
+        )
+    )
+    val selectedLabel by animateColorAsState(
+        targetValue = if (isChecked) onPrimary else onSurface,
+        animationSpec = tween(
+            durationMillis = 300,
+            easing = LinearOutSlowInEasing
+        )
+    )
+
+
     FilterChip(
         label = {
             Text(
@@ -76,8 +101,8 @@ fun SectionChip(
         selected = isChecked,
         onClick = { onClickItem(id) },
         colors = FilterChipDefaults.filterChipColors(
-            selectedContainerColor = MaterialTheme.colorScheme.primary,
-            selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+            selectedContainerColor = selectedContainer,
+            selectedLabelColor = selectedLabel
         ),
         modifier = modifier
             .padding(horizontal = 8.dp)

@@ -3,6 +3,7 @@ package com.cailloutr.rightnewscompose.ui.screens.mainscreen
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -56,13 +57,14 @@ fun MainScreen(
         isRefreshingSectionsNewsState = uiState.isRefreshing,
         onItemSelectedListener = { id ->
             viewModel.setSelectedSection(id)
-            viewModel.getNewsBySection {  }
+            viewModel.getNewsBySection { }
         },
         selectedSection = uiState.selectedSection,
         modifier = modifier
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen(
@@ -145,7 +147,7 @@ fun MainScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    CircularProgressIndicator()
+                    CircularProgressIndicator(modifier = Modifier.animateItemPlacement())
                 }
             }
         }
@@ -159,7 +161,8 @@ fun MainScreen(
                     DateUtil.getFormattedDate(article.webPublicationDate)
                 } catch (e: Exception) {
                     article.webPublicationDate
-                }
+                },
+                modifier = Modifier.animateItemPlacement()
             )
         }
     }
