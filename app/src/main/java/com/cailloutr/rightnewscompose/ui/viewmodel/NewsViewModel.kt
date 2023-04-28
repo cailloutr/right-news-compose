@@ -15,7 +15,6 @@ import com.cailloutr.rightnewscompose.other.DispatchersProvider
 import com.cailloutr.rightnewscompose.other.Resource
 import com.cailloutr.rightnewscompose.usecases.NewsUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
@@ -78,7 +77,6 @@ class NewsViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(isRefreshing = true)
                 }
-                delay(1000)
                 _uiState.update {
                     it.copy(
                         sectionArticles = newsUseCases.getNewsBySectionUseCase(
