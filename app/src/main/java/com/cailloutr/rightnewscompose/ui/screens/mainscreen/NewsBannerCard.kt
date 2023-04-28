@@ -114,8 +114,6 @@ fun NewsBannerCard(
                     Surface(
                         shape = RoundedCornerShape(12.dp),
                         color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
-                        modifier = Modifier
-                            .fillMaxWidth()
                     ) {
                         Text(
                             text = title,
@@ -133,8 +131,6 @@ fun NewsBannerCard(
                     Surface(
                         shape = RoundedCornerShape(12.dp),
                         color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
-                        modifier = Modifier
-                            .fillMaxWidth()
                     ) {
                         HtmlText(
                             text = trailText,
