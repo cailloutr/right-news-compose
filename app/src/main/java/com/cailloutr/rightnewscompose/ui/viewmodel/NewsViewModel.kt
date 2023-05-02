@@ -8,11 +8,10 @@ import com.cailloutr.rightnewscompose.constants.Constants.LATEST_NEWS
 import com.cailloutr.rightnewscompose.data.local.roommodel.toSection
 import com.cailloutr.rightnewscompose.data.remote.responses.news.NewsRoot
 import com.cailloutr.rightnewscompose.data.remote.responses.sections.SectionsRoot
-import com.cailloutr.rightnewscompose.model.NewsContainer
-import com.cailloutr.rightnewscompose.model.Section
 import com.cailloutr.rightnewscompose.model.SectionWrapper
 import com.cailloutr.rightnewscompose.other.DispatchersProvider
 import com.cailloutr.rightnewscompose.other.Resource
+import com.cailloutr.rightnewscompose.ui.uistate.MainScreenUiState
 import com.cailloutr.rightnewscompose.usecases.NewsUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -111,11 +110,3 @@ class NewsViewModel @Inject constructor(
         }
     }
 }
-
-data class MainScreenUiState(
-    var sections: List<Section> = listOf(),
-    var latestNews: NewsContainer? = null,
-    var sectionArticles: NewsContainer? = null,
-    var isRefreshing: Boolean = false,
-    var selectedSection: String = FIRST_SECTIONS_ID,
-)

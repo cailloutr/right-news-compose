@@ -27,6 +27,9 @@ class NewsRepository @Inject constructor(
     private val database: NewsDatabase,
     private val serviceImpl: TheGuardianService,
 ) : NewsRepositoryInterface {
+    override fun getArticleById(articleId: String): Flow<RoomArticle?> {
+        return database.articleDao.getArticle(articleId)
+    }
 
     override fun getAllSections(): Flow<List<RoomSection>> {
         return database.sectionDao.getAllSection()

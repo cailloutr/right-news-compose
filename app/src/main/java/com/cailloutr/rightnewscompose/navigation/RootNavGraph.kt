@@ -1,14 +1,16 @@
 package com.cailloutr.rightnewscompose.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.cailloutr.rightnewscompose.ui.screens.HomeScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun RootNavGraph() {
-    val navController = rememberNavController()
+fun RootNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
         route = Graph.ROOT,
@@ -23,5 +25,5 @@ fun RootNavGraph() {
 object Graph {
     const val ROOT = "root_graph"
     const val HOME = "home_graph"
-    const val NEWS = "news_graph"
+    const val DETAILS = "details_graph"
 }

@@ -32,6 +32,7 @@ import com.ireward.htmlcompose.HtmlText
 @Composable
 fun BannerHorizontalPager(
     articleList: List<Article>,
+    onClickListener: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val pagerState = rememberPagerState()
@@ -50,7 +51,9 @@ fun BannerHorizontalPager(
             NewsBannerCard(
                 title = articleList[page].webTitle,
                 trailText = articleList[page].trailText.toString(),
-                backgroundImageUrl = articleList[page].thumbnail.toString()
+                backgroundImageUrl = articleList[page].thumbnail.toString(),
+                id = articleList[page].id,
+                onClick = onClickListener
             )
         }
         Spacer(modifier = Modifier.size(8.dp))
@@ -78,14 +81,18 @@ fun BannerHorizontalPager(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewsBannerCard(
     title: String,
     trailText: String,
     backgroundImageUrl: String,
+    id: String,
+    onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
+        onClick = { onClick(id) },
         modifier = modifier
             .height(250.dp)
     ) {
@@ -158,7 +165,9 @@ fun NewsBannerCardPreview() {
             NewsBannerCard(
                 title = "Title",
                 trailText = "Description",
-                backgroundImageUrl = "https://cdn.pixabay.com/photo/2023/04/06/01/26/heart-7902540_960_720.jpg"
+                backgroundImageUrl = "https://cdn.pixabay.com/photo/2023/04/06/01/26/heart-7902540_960_720.jpg",
+                id = "id",
+                onClick = {}
             )
         }
     }
@@ -172,7 +181,9 @@ fun DarkNewsBannerCardPreview() {
             NewsBannerCard(
                 title = "Title",
                 trailText = "Description",
-                backgroundImageUrl = "https://cdn.pixabay.com/photo/2023/04/06/01/26/heart-7902540_960_720.jpg"
+                backgroundImageUrl = "https://cdn.pixabay.com/photo/2023/04/06/01/26/heart-7902540_960_720.jpg",
+                id = "id",
+                onClick = {}
             )
         }
     }
@@ -202,7 +213,8 @@ fun BannerHorizontalPagerPreview() {
                         headline = it.toString(),
                         body = it.toString(),
                     )
-                }
+                },
+                onClickListener = {}
             )
         }
     }
@@ -232,7 +244,8 @@ fun DarkBannerHorizontalPagerPreview() {
                         headline = it.toString(),
                         body = it.toString(),
                     )
-                }
+                },
+                onClickListener = {}
             )
         }
     }

@@ -9,6 +9,7 @@ import com.cailloutr.rightnewscompose.data.remote.TheGuardianServiceImpl
 import com.cailloutr.rightnewscompose.other.DefaultDispatchers
 import com.cailloutr.rightnewscompose.other.DispatchersProvider
 import com.cailloutr.rightnewscompose.repository.NewsRepository
+import com.cailloutr.rightnewscompose.usecases.GetArticleByIdUseCase
 import com.cailloutr.rightnewscompose.usecases.GetNewsBySectionUseCase
 import com.cailloutr.rightnewscompose.usecases.GetSectionsUseCase
 import com.cailloutr.rightnewscompose.usecases.NewsUseCases
@@ -78,7 +79,8 @@ object AppModule {
     fun providesNewsUseCases(repository: NewsRepository): NewsUseCases {
         return NewsUseCases(
             GetSectionsUseCase(repository),
-            GetNewsBySectionUseCase(repository)
+            GetNewsBySectionUseCase(repository),
+            GetArticleByIdUseCase(repository)
         )
     }
 }

@@ -46,6 +46,7 @@ import com.cailloutr.rightnewscompose.util.DateUtil
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
+    navigateToDetails: (String) -> Unit,
     viewModel: NewsViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -55,9 +56,12 @@ fun MainScreen(
         sectionNewsState = uiState.sectionArticles?.results ?: listOf(),
         mainSectionsState = uiState.sections.map { it.toChipItem() },
         isRefreshingSectionsNewsState = uiState.isRefreshing,
-        onItemSelectedListener = { id ->
+        onSectionSelectedListener = { id ->
             viewModel.setSelectedSection(id)
             viewModel.getNewsBySection { }
+        },
+        onArticleClickListener = { id ->
+            navigateToDetails(id)
         },
         selectedSection = uiState.selectedSection,
         modifier = modifier
@@ -75,7 +79,8 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     selectedSection: String = "",
     seeAllOnClick: () -> Unit = {},
-    onItemSelectedListener: (String) -> Unit = {},
+    onSectionSelectedListener: (String) -> Unit = {},
+    onArticleClickListener: (String) -> Unit = {},
 ) {
     LazyColumn(
         modifier = modifier
@@ -126,6 +131,9 @@ fun MainScreen(
             Spacer(modifier = Modifier.size(16.dp))
             BannerHorizontalPager(
                 articleList = latestNewsState,
+                onClickListener = { id ->
+                    onArticleClickListener(id)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(280.dp)
@@ -135,7 +143,7 @@ fun MainScreen(
                 list = mainSectionsState,
                 selectedSection = selectedSection,
                 onItemSelectedListener = { id ->
-                    onItemSelectedListener(id)
+                    onSectionSelectedListener(id)
                 },
                 modifier = Modifier
                     .fillMaxWidth()

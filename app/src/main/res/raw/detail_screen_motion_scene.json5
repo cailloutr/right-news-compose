@@ -1,0 +1,101 @@
+{
+  ConstraintSets: {
+    start: {
+      navigateBack: {
+        width: 32,
+        height: 32,
+        top: ['parent', 'top', 16],
+        start: ['parent', 'start', 16],
+      },
+      headerImage: {
+        width: 'spread',
+        height: 350,
+        top: ['parent', 'top'],
+        start: ['parent', 'start'],
+        end: ['parent', 'end'],
+        translationY: 0,
+        alpha: 1
+      },
+      card: {
+        width: 'spread',
+        height: 130,
+        top: ['contentText', 'top'],
+        start: ['parent', 'start', 32],
+        end: ['parent', 'end', 32],
+        bottom: ['contentText', 'top'],
+        alpha: 1,
+        visibility: 'visible',
+      },
+      contentBg: {
+        width: 'spread',
+        height: 'spread',
+        top: ['parent', 'top', 330],
+        bottom: ['parent', 'bottom'],
+        start: ['parent', 'start'],
+        end: ['parent', 'end']
+      },
+      contentText: {
+        width: 'spread',
+        height: 'spread',
+        top: ['contentBg', 'top'],
+        bottom: ['parent', 'bottom'],
+        start: ['contentBg', 'start'],
+        end: ['contentBg', 'end']
+      }
+    },
+    end: {
+      navigateBack: {
+        width: 32,
+        height: 32,
+        top: ['parent', 'top', 16],
+        start: ['parent', 'start', 16],
+      },
+      headerImage: {
+        width: "spread",
+        height: 350,
+        top: ['parent', 'top'],
+        start: ['parent', 'start'],
+        end: ['parent', 'end'],
+        translationY: -350,
+        alpha: 0.3
+      },
+      card: {
+        width: 'spread',
+        height: 130,
+        top: ['contentText', 'top'],
+        start: ['parent', 'start', 32],
+        end: ['parent', 'end', 32],
+        bottom: ['contentText', 'top'],
+        alpha: 0,
+        visibility: 'invisible',
+      },
+      contentBg: {
+        width: 'spread',
+        height: 'spread',
+        top: ['parent', 'top'],
+        bottom: ['parent', 'bottom'],
+        start: ['parent', 'start'],
+        end: ['parent', 'end']
+      },
+      contentText: {
+        width: 'spread',
+        height: 'spread',
+        top: ['contentBg', 'top'],
+        bottom: ['parent', 'bottom'],
+        start: ['contentBg', 'start'],
+        end: ['contentBg', 'end']
+      }
+    }
+  },
+  Transitions: {
+    default: {
+      from: 'start',
+      to: 'end',
+      onSwipe: {
+        anchor: 'contentBg',
+        direction: 'up',
+        side: 'top',
+      },
+    }
+  }
+}

@@ -1,5 +1,6 @@
 package com.cailloutr.rightnewscompose.repository
 
+import com.cailloutr.rightnewscompose.data.local.roommodel.RoomArticle
 import com.cailloutr.rightnewscompose.data.local.roommodel.RoomSection
 import com.cailloutr.rightnewscompose.data.remote.responses.news.NewsRoot
 import com.cailloutr.rightnewscompose.data.remote.responses.sections.SectionsRoot
@@ -10,6 +11,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 
 interface NewsRepositoryInterface {
+
+    fun getArticleById(articleId: String): Flow<RoomArticle?>
+
 
     fun getAllSections(): Flow<List<RoomSection>>
 
