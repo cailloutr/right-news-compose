@@ -1,6 +1,8 @@
 package com.cailloutr.rightnewscompose.ui.screens.mainscreen
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -17,8 +19,10 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
+import com.cailloutr.rightnewscompose.util.DateUtil
 import com.ireward.htmlcompose.HtmlText
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NewsSectionsCard(
     title: String,
@@ -59,9 +63,9 @@ fun NewsSectionsCard(
                 ) {
                     Text(
                         text = title,
-                        style = MaterialTheme.typography.headlineSmall,
+                        style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        maxLines = 1,
+                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier
                             .padding(horizontal = 8.dp)
@@ -105,7 +109,7 @@ fun NewsSectionsCard(
                         modifier = Modifier
                     ) {
                         Text(
-                            text = date,
+                            text = DateUtil.getFormattedDate(date),
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.Bold,
                             maxLines = 1,
@@ -121,6 +125,7 @@ fun NewsSectionsCard(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun NewsSectionsCardPreview() {
@@ -136,6 +141,7 @@ fun NewsSectionsCardPreview() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun DarkNewsSectionsCardPreview() {
