@@ -6,7 +6,9 @@ import com.cailloutr.rightnewscompose.TestCoroutineDispatcher
 import com.cailloutr.rightnewscompose.TestsConstants
 import com.cailloutr.rightnewscompose.data.local.NewsDatabase
 import com.cailloutr.rightnewscompose.data.remote.TheGuardianServiceImpl
+import com.cailloutr.rightnewscompose.data.remote.responses.news.NewsFields
 import com.cailloutr.rightnewscompose.data.remote.responses.news.NewsResponse
+import com.cailloutr.rightnewscompose.data.remote.responses.news.NewsResult
 import com.cailloutr.rightnewscompose.data.remote.responses.news.NewsRoot
 import com.cailloutr.rightnewscompose.data.remote.responses.news.toNewsContainer
 import com.cailloutr.rightnewscompose.data.remote.responses.news.toRoomArticle
@@ -67,6 +69,45 @@ class NewsRepositoryTest {
                 serviceImpl
             )
         )
+    }
+
+    @Test
+
+    fun test_getArticleByIdWithAValidIdShouldReturnAMatchingArticle() = runTest {
+        val article = NewsResult(
+            id = "games/2023/mar/28/super-mario-lush-soaps2",
+            type = "article",
+            sectionId = "news",
+            sectionName = "Article",
+            webPublicationDate = "2023-03-28T12:15:18Z",
+            webTitle = "Luigi has sweet notes of apple’: testing out Lush’s unlikely Super Mario soaps",
+            webUrl = "https://www.theguardian.com/games/2023/mar/28/super-mario-lush-soaps",
+            apiUrl = "https://content.guardianapis.com/games/2023/mar/28/super-mario-lush-soaps",
+            fields = NewsFields(
+                headline = "Luigi has sweet notes of apple’: testing out Lush’s unlikely Super Mario soaps",
+                trailText = "Animal-friendly cosmetics brand Lush is releasing a range of Mario-themed products – so our reporter tried them, for science",
+                thumbnail = "https://media.guim.co.uk/c6436ebbf6e5eceee60a496698e4fc5004c176db/0_327_2000_1200/500.jpg",
+                body = "Luigi has sweet notes of apple’: testing out Lush’s unlikely Super Mario soaps"
+            ),
+            isHosted = false,
+            pillarId = "pillar/arts",
+            pillarName = "Arts"
+        ).toRoomArticle("teste")
+
+        database.articleDao.insertArticle(article)
+
+        val result = repository.getArticleById("games/2023/mar/28/super-mario-lush-soaps2").first()
+
+        assertThat(result).isEqualTo(article)
+    }
+
+    @Test
+    fun test_getArticleByIdWithInvalidIdShouldReturnNull() = runTest {
+        val article = "nonexistent_article_id"
+
+        val result = repository.getArticleById(article).first()
+
+        assertThat(result).isNull()
     }
 
     @Test
@@ -226,7 +267,7 @@ class NewsRepositoryTest {
     }
 
     @Test
-    fun test_cleanCacheShouldDeleteAllArticlesFromSection() = runTest{
+    fun test_cleanCacheShouldDeleteAllArticlesFromSection() = runTest {
         val section = SectionWrapper("news", "news")
         val response =
             TestsConstants.fakeArticle
