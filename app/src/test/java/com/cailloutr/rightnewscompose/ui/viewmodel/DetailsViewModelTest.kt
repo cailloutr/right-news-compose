@@ -54,6 +54,7 @@ class DetailsViewModelTest {
         assertThat(viewModel.uiState.value.body).isEqualTo(article.body)
         assertThat(viewModel.uiState.value.thumbnail).isEqualTo(article.thumbnail)
         assertThat(viewModel.uiState.value.publicationDate).isEqualTo(article.webPublicationDate)
+        assertThat(viewModel.uiState.value.webUrl).isEqualTo(article.webUrl)
     }
 
     @Test
