@@ -133,12 +133,12 @@ fun DetailsScreen(
     publicationDate: String,
     title: String,
     body: String,
+    initialCondition: Boolean,
     onNavigateIconClick: () -> Unit,
+    onStart: () -> Unit,
+    onMotionStateProgressChanges: (Float) -> Unit,
     modifier: Modifier = Modifier,
     motionStateProgress: Float = motionState.currentProgress,
-    onMotionStateProgressChanges: (Float) -> Unit,
-    initialCondition: Boolean,
-    onStart: () -> Unit,
 ) {
     val corners = 50f - ((motionState.currentProgress * 10)).coerceAtLeast(10f)
 
@@ -241,6 +241,9 @@ fun DetailsScreen(
 
 
         Card(
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.7f)
+            ),
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 4.dp,
             ),
@@ -249,7 +252,7 @@ fun DetailsScreen(
 
         ) {
             Text(
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodySmall,
                 text = try {
                     DateUtil.getFormattedDate(publicationDate)
                 } catch (e: Exception) {
@@ -265,10 +268,10 @@ fun DetailsScreen(
                 )
             )
             Text(
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
                 text = title,
                 overflow = TextOverflow.Ellipsis,
-                maxLines = 3,
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             )
         }
