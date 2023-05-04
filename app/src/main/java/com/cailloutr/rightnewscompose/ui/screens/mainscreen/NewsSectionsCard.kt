@@ -19,9 +19,9 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
-import com.cailloutr.rightnewscompose.util.DateUtil
 import com.ireward.htmlcompose.HtmlText
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NewsSectionsCard(
@@ -29,9 +29,14 @@ fun NewsSectionsCard(
     trailText: String,
     backgroundImageUrl: String,
     date: String,
+    id: String,
+    onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
+        onClick = {
+            onClick(id)
+        },
         modifier = modifier
             .height(150.dp)
             .padding(vertical = 8.dp)
@@ -109,7 +114,7 @@ fun NewsSectionsCard(
                         modifier = Modifier
                     ) {
                         Text(
-                            text = DateUtil.getFormattedDate(date),
+                            text = date,
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.Bold,
                             maxLines = 1,
@@ -135,7 +140,9 @@ fun NewsSectionsCardPreview() {
                 title = "Title",
                 trailText = "Description",
                 backgroundImageUrl = "https://cdn.pixabay.com/photo/2023/04/06/01/26/heart-7902540_960_720.jpg",
-                date = "25/12/2020"
+                date = "2022-10-21T14:06:14Z",
+                id = "",
+                onClick = {}
             )
         }
     }
@@ -151,7 +158,9 @@ fun DarkNewsSectionsCardPreview() {
                 title = "Title",
                 trailText = "Description",
                 backgroundImageUrl = "https://cdn.pixabay.com/photo/2023/04/06/01/26/heart-7902540_960_720.jpg",
-                date = "25/12/2020"
+                date = "2022-10-21T14:06:14Z",
+                id = "",
+                onClick = {}
             )
         }
     }

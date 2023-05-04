@@ -165,10 +165,10 @@ fun MainScreen(
                 title = article.webTitle,
                 trailText = article.trailText!!,
                 backgroundImageUrl = article.thumbnail!!,
-                date = try {
-                    DateUtil.getFormattedDate(article.webPublicationDate)
-                } catch (e: Exception) {
-                    article.webPublicationDate
+                date = DateUtil.getFormattedDate(article.webPublicationDate),
+                id = article.id,
+                onClick = { id ->
+                    onArticleClickListener(id)
                 },
                 modifier = Modifier.animateItemPlacement()
             )
