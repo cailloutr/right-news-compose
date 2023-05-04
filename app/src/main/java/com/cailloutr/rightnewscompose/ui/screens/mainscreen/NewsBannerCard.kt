@@ -53,7 +53,9 @@ fun BannerHorizontalPager(
                 trailText = articleList[page].trailText.toString(),
                 backgroundImageUrl = articleList[page].thumbnail.toString(),
                 id = articleList[page].id,
-                onClick = onClickListener
+                onClick = {
+                    onClickListener(it)
+                }
             )
         }
         Spacer(modifier = Modifier.size(8.dp))
