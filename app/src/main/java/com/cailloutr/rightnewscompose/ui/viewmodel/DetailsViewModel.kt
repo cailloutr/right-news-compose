@@ -34,7 +34,8 @@ class DetailsViewModel @Inject constructor(
                         thumbnail = article.thumbnail ?: "",
                         publicationDate = article.webPublicationDate,
                         title = article.webTitle,
-                        body = article.body ?: ""
+                        body = article.body ?: "",
+                        webUrl = article.webUrl
                     )
                 }
             }

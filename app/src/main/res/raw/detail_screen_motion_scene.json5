@@ -7,6 +7,12 @@
         top: ['parent', 'top', 16],
         start: ['parent', 'start', 16],
       },
+      more: {
+        width: 32,
+        height: 32,
+        top: ['parent', 'top', 16],
+        end: ['parent', 'end', 16],
+      },
       headerImage: {
         width: 'spread',
         height: 350,
@@ -49,6 +55,12 @@
         height: 32,
         top: ['parent', 'top', 16],
         start: ['parent', 'start', 16],
+      },
+      more: {
+        width: 32,
+        height: 32,
+        top: ['parent', 'top', 16],
+        end: ['parent', 'end', 16],
       },
       headerImage: {
         width: "spread",

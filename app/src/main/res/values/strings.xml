@@ -14,4 +14,8 @@
         Nam placerat mauris ac aliquam fermentum. Suspendisse finibus ornare justo, id rutrum ante eleifend posuere. Nullam venenatis ultrices tempor. Ut non justo ut purus congue pulvinar. Praesent in sapien in nibh dapibus cursus mattis convallis lectus. Morbi nibh nunc, tristique nec augue nec, imperdiet aliquam orci. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Etiam congue euismod velit sed egestas. Aenean fermentum feugiat eros et viverra. Maecenas a justo porttitor, congue diam eget, dignissim orci. Sed malesuada mi id posuere venenatis. Sed quis lectus vitae eros ultrices viverra quis nec lorem.
     </string>
     <string name="navigate_back">Navigate back</string>
+    <string name="share">Share</string>
+    <string name="share_link">Share Link</string>
+    <string name="options">Options</string>
+    <string name="open_in_browser">Open in Browser</string>
 </resources>

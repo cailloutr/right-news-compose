@@ -1,9 +1,13 @@
 package com.cailloutr.rightnewscompose.navigation
 
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -12,7 +16,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.cailloutr.rightnewscompose.R
 import com.cailloutr.rightnewscompose.extensions.fromRouteId
+import com.cailloutr.rightnewscompose.extensions.shareLinkIntent
 import com.cailloutr.rightnewscompose.ui.screens.detailscreen.DetailsScreen
 import com.cailloutr.rightnewscompose.ui.screens.mainscreen.MainScreen
 import com.cailloutr.rightnewscompose.ui.viewmodel.DetailsViewModel
@@ -22,6 +28,8 @@ import com.cailloutr.rightnewscompose.ui.viewmodel.DetailsViewModel
 fun HomeNavGraph(navController: NavHostController) {
     val viewModel = hiltViewModel<DetailsViewModel>()
     val navigationActions = RightNewsNavigationActions(navController)
+    val context = LocalContext.current
+    val uriHandler = LocalUriHandler.current
 
     NavHost(
         navController = navController,
@@ -35,12 +43,13 @@ fun HomeNavGraph(navController: NavHostController) {
                 }
             )
         }
-
         composable(route = BottomBarScreens.Favorite.route) {}
         composable(route = BottomBarScreens.Profile.route) {}
         detailsNavGraph(
             viewModel = viewModel,
-            navigationActions = navigationActions
+            navigationActions = navigationActions,
+            context = context,
+            uriHandler = uriHandler
         )
     }
 }
@@ -49,6 +58,8 @@ fun HomeNavGraph(navController: NavHostController) {
 fun NavGraphBuilder.detailsNavGraph(
     navigationActions: RightNewsNavigationActions,
     viewModel: DetailsViewModel,
+    context: Context,
+    uriHandler: UriHandler
 ) {
     navigation(
         route = Graph.DETAILS,
@@ -69,6 +80,15 @@ fun NavGraphBuilder.detailsNavGraph(
             DetailsScreen(
                 uiState = uiState.value,
                 navigateUp = { navigationActions.navigateUp() },
+                share = { url ->
+                    context.shareLinkIntent(
+                        title = R.string.share_link,
+                        value = url
+                    )
+                },
+                openLink = { url ->
+                    uriHandler.openUri(url)
+                },
             )
         }
     }

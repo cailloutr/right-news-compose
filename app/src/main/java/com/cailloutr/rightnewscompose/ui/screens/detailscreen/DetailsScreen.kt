@@ -58,6 +58,7 @@ import androidx.constraintlayout.compose.rememberMotionLayoutState
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.cailloutr.rightnewscompose.R
+import com.cailloutr.rightnewscompose.ui.components.DropDownMenu
 import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
 import com.cailloutr.rightnewscompose.ui.uistate.DetailsScreenUiState
 import com.cailloutr.rightnewscompose.util.DateUtil
@@ -71,6 +72,8 @@ fun DetailsScreen(
     modifier: Modifier = Modifier,
     uiState: DetailsScreenUiState,
     navigateUp: () -> Unit,
+    share: (String) -> Unit,
+    openLink: (String) -> Unit,
 ) {
     val context = LocalContext.current
     val motionScene = rememberSaveable {
@@ -93,9 +96,13 @@ fun DetailsScreen(
         mutableStateOf(true)
     }
 
-
     val scrollState = rememberScrollState()
     val isScrollEnabled = rememberSaveable { mutableStateOf(false) }
+
+    val dropDownItems = listOf(
+        DropDownItem(text = R.string.share),
+        DropDownItem(text = R.string.open_in_browser)
+    )
 
     DetailsScreen(
         motionScene = motionScene,
@@ -111,10 +118,17 @@ fun DetailsScreen(
         onMotionStateProgressChanges = {
             motionStateCurrentProgress = it
         },
+        onShareOptionClick = {
+            share(uiState.webUrl)
+        },
+        onOpenLinkClick = {
+            openLink(uiState.webUrl)
+        },
         initialCondition = initialCondition,
         onStart = {
             initialCondition = false
         },
+        dropDownItems = dropDownItems,
         modifier = modifier
     )
 
@@ -135,6 +149,9 @@ fun DetailsScreen(
     body: String,
     initialCondition: Boolean,
     onNavigateIconClick: () -> Unit,
+    onShareOptionClick: () -> Unit,
+    onOpenLinkClick: () -> Unit,
+    dropDownItems: List<DropDownItem>,
     onStart: () -> Unit,
     onMotionStateProgressChanges: (Float) -> Unit,
     modifier: Modifier = Modifier,
@@ -303,6 +320,21 @@ fun DetailsScreen(
             )
         }
 
+        DropDownMenu(
+            dropDownItems = dropDownItems,
+            onClick = { menuItem ->
+                when (menuItem.text) {
+                    R.string.share -> {
+                        onShareOptionClick()
+                    }
+
+                    R.string.open_in_browser -> {
+                        onOpenLinkClick()
+                    }
+                }
+            },
+            modifier = Modifier.layoutId("more")
+        )
     }
 }
 
@@ -320,7 +352,9 @@ fun DetailsScreenPreview() {
             )
             DetailsScreen(
                 uiState = uiState,
-                navigateUp = {}
+                navigateUp = {},
+                share = {},
+                openLink = {}
             )
         }
     }
@@ -340,7 +374,9 @@ fun DarkDetailsScreenPreview() {
             )
             DetailsScreen(
                 uiState = uiState,
-                navigateUp = {}
+                navigateUp = {},
+                share = {},
+                openLink = {}
             )
         }
     }
