@@ -1,11 +1,13 @@
 package com.cailloutr.rightnewscompose.util
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
+
 
 object DateUtil {
 
@@ -21,16 +23,14 @@ object DateUtil {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getFormattedDate(date: String): String {
-        val instantDate = Date.from(Instant.parse(date))
+        val instant = Instant.parse(date)
+        val zoneId = ZoneId.systemDefault()
+        val localDateTime = LocalDateTime.ofInstant(instant, zoneId)
+        val formatter =
+            DateTimeFormatter.ofPattern("EEE, d MMM, yyyy - HH:mm - z", Locale.getDefault())
         return try {
-            DateTimeFormatter
-                .ofPattern(
-                    "EEE, dd MMM, yyyy - HH:mm - z",
-                    Locale.getDefault()
-                )
-                .format(Instant.ofEpochMilli(instantDate.time))
+            localDateTime.atZone(zoneId).format(formatter)
         } catch (e: Exception) {
-            Log.e("getFormattedDate", "Error: ${e.message.toString()}", )
             date
         }
     }
