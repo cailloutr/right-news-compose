@@ -18,4 +18,6 @@
     <string name="share_link">Share Link</string>
     <string name="options">Options</string>
     <string name="open_in_browser">Open in Browser</string>
+    <string name="network_connection_error">Network connection error. Please check your internet and try again.</string>
+    <string name="up_to_date">Up to date!!</string>
 </resources>

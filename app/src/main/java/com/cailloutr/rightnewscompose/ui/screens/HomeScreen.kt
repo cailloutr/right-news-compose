@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -21,8 +23,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.cailloutr.rightnewscompose.R
 import com.cailloutr.rightnewscompose.navigation.BottomBarScreens
-import com.cailloutr.rightnewscompose.ui.components.BottomNavigationBar
 import com.cailloutr.rightnewscompose.navigation.HomeNavGraph
+import com.cailloutr.rightnewscompose.ui.components.BottomNavigationBar
 import com.cailloutr.rightnewscompose.ui.components.RightNewsMainAppbar
 import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
 
@@ -45,6 +47,10 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
 
     val bottomBarDestination = screens.any { it.route == currentDestination?.route }
 
+    val snackbarHostState = remember {
+        SnackbarHostState()
+    }
+
     Scaffold(
         topBar = {
             AnimatedVisibility(visible = bottomBarDestination) {
@@ -62,11 +68,15 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
                 )
             }
         },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             HomeNavGraph(
-                navController = navController
+                navController = navController,
+                snackbarHostState = snackbarHostState
             )
         }
     }

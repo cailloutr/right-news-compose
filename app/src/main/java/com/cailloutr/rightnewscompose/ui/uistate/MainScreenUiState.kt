@@ -8,6 +8,7 @@ data class MainScreenUiState(
     var sections: List<Section> = listOf(),
     var latestNews: NewsContainer? = null,
     var sectionArticles: NewsContainer? = null,
-    var isRefreshing: Boolean = false,
+    var isRefreshingSectionArticles: Boolean = false,
+    var isRefreshingAll: Boolean = false,
     var selectedSection: String = Constants.FIRST_SECTIONS_ID,
 )

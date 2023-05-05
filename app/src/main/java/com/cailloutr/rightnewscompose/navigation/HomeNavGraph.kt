@@ -3,6 +3,7 @@ package com.cailloutr.rightnewscompose.navigation
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
@@ -25,7 +26,7 @@ import com.cailloutr.rightnewscompose.ui.viewmodel.DetailsViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HomeNavGraph(navController: NavHostController) {
+fun HomeNavGraph(navController: NavHostController, snackbarHostState: SnackbarHostState) {
     val viewModel = hiltViewModel<DetailsViewModel>()
     val navigationActions = RightNewsNavigationActions(navController)
     val context = LocalContext.current
@@ -40,7 +41,9 @@ fun HomeNavGraph(navController: NavHostController) {
             MainScreen(
                 navigateToDetails = { id ->
                     navigationActions.navigateToDetails(id)
-                }
+                },
+                snackbarHostState = snackbarHostState,
+                context = context
             )
         }
         composable(route = BottomBarScreens.Favorite.route) {}

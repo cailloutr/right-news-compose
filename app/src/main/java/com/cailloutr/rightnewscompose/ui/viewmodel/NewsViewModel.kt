@@ -3,7 +3,6 @@ package com.cailloutr.rightnewscompose.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cailloutr.rightnewscompose.constants.Constants.DEFAULT_SECTIONS
-import com.cailloutr.rightnewscompose.constants.Constants.FIRST_SECTIONS_ID
 import com.cailloutr.rightnewscompose.constants.Constants.LATEST_NEWS
 import com.cailloutr.rightnewscompose.data.local.roommodel.toSection
 import com.cailloutr.rightnewscompose.data.remote.responses.news.NewsRoot
@@ -18,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,15 +33,30 @@ class NewsViewModel @Inject constructor(
     val uiState: StateFlow<MainScreenUiState>
         get() = _uiState
 
+
     init {
         refreshData()
     }
 
-    fun refreshData(responseStatus: (Resource<Exception>) -> Unit = {}) {
-        getSectionsFilteredById(DEFAULT_SECTIONS) {}
-        getLatestNews(SectionWrapper(sectionName = LATEST_NEWS, value = "")) {}
-        getNewsBySection {}
-        setSelectedSection(FIRST_SECTIONS_ID)
+    fun refreshData(responseStatus: (Resource<*>) -> Unit = {}) {
+        _uiState.update {
+            it.copy(
+                isRefreshingAll = true
+            )
+        }
+        viewModelScope.launch(dispatchers.main) {
+            getLatestNews(SectionWrapper(sectionName = LATEST_NEWS, value = "")) {
+                responseStatus(it)
+            }
+            getSectionsFilteredById(DEFAULT_SECTIONS) {}
+            getNewsBySection {}
+            joinAll()
+            _uiState.update {
+                it.copy(
+                    isRefreshingAll = false
+                )
+            }
+        }
     }
 
     fun setSelectedSection(id: String) {
@@ -74,7 +89,7 @@ class NewsViewModel @Inject constructor(
             )
             if (selectedSection.sectionName.isNotEmpty()) {
                 _uiState.update {
-                    it.copy(isRefreshing = true)
+                    it.copy(isRefreshingSectionArticles = true)
                 }
                 _uiState.update {
                     it.copy(
@@ -83,7 +98,7 @@ class NewsViewModel @Inject constructor(
                             selectedSection,
                             responseStatus
                         ).first(),
-                        isRefreshing = false
+                        isRefreshingSectionArticles = false
                     )
                 }
             }
