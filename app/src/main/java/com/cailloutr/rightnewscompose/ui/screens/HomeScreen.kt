@@ -22,10 +22,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.cailloutr.rightnewscompose.R
+import com.cailloutr.rightnewscompose.navigation.AllSectionsScreen
 import com.cailloutr.rightnewscompose.navigation.BottomBarScreens
 import com.cailloutr.rightnewscompose.navigation.HomeNavGraph
 import com.cailloutr.rightnewscompose.ui.components.BottomNavigationBar
 import com.cailloutr.rightnewscompose.ui.components.RightNewsMainAppbar
+import com.cailloutr.rightnewscompose.ui.components.SmallAppBar
 import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -46,16 +48,25 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
     val currentDestination = navBackStackEntry?.destination
 
     val bottomBarDestination = screens.any { it.route == currentDestination?.route }
+    val appBarDestination = screens.any { it.route == currentDestination?.route }
+    val isAllSectionsDestination =
+        currentDestination?.route == AllSectionsScreen.AllSections.route
 
     val snackbarHostState = remember {
         SnackbarHostState()
     }
-
     Scaffold(
         topBar = {
-            AnimatedVisibility(visible = bottomBarDestination) {
+            AnimatedVisibility(visible = appBarDestination) {
                 RightNewsMainAppbar(
                     title = stringResource(id = R.string.app_name),
+                    scrollBehavior = scrollBehavior
+                )
+            }
+            AnimatedVisibility(visible = isAllSectionsDestination) {
+                SmallAppBar(
+                    title = stringResource(id = R.string.all_sections),
+                    navigationIcon = { navController.navigateUp() },
                     scrollBehavior = scrollBehavior
                 )
             }

@@ -1,4 +1,4 @@
-package com.cailloutr.rightnewscompose.ui.screens.mainscreen
+package com.cailloutr.rightnewscompose.ui.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.animateColorAsState
@@ -6,6 +6,7 @@ import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
@@ -13,22 +14,26 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SelectableChipBorder
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cailloutr.rightnewscompose.model.ChipItem
 import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SectionChipGroup(
     list: List<ChipItem>,
-    selectedSection: String,
+    selectedSection: String?,
     onItemSelectedListener: (String) -> Unit,
     modifier: Modifier = Modifier,
+    ChipItem: @Composable RowScope.() -> Unit = {}
 ) {
     val horizontalScrollState = rememberScrollState()
     Row(
@@ -52,8 +57,10 @@ fun SectionChipGroup(
                         onItemSelectedListener(id)
                     },
                     isChecked = it.id == selectedSection,
+                    modifier = Modifier.padding(horizontal = 8.dp)
                 )
             }
+            ChipItem()
         }
     }
 }
@@ -66,13 +73,12 @@ fun SectionChip(
     modifier: Modifier = Modifier,
     isChecked: Boolean = false,
     onClickItem: (String) -> Unit,
+    onPrimary: Color = MaterialTheme.colorScheme.onPrimary,
+    primary: Color = MaterialTheme.colorScheme.primary,
+    surface: Color = MaterialTheme.colorScheme.onPrimary,
+    onSurface: Color = MaterialTheme.colorScheme.onSurface,
+    border: SelectableChipBorder = FilterChipDefaults.filterChipBorder(),
 ) {
-
-    val onPrimary = MaterialTheme.colorScheme.onPrimary
-    val primary = MaterialTheme.colorScheme.primary
-    val surface = MaterialTheme.colorScheme.onPrimary
-    val onSurface = MaterialTheme.colorScheme.onSurface
-
     val selectedContainer by animateColorAsState(
         targetValue = if (isChecked) primary else surface,
         animationSpec = tween(
@@ -102,13 +108,14 @@ fun SectionChip(
         onClick = { onClickItem(id) },
         colors = FilterChipDefaults.filterChipColors(
             selectedContainerColor = selectedContainer,
-            selectedLabelColor = selectedLabel
+            selectedLabelColor = selectedLabel,
         ),
+        border = border,
         modifier = modifier
-            .padding(horizontal = 8.dp)
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun SectionChipPreview() {
@@ -124,6 +131,7 @@ fun SectionChipPreview() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun DarkSectionChipPreview() {

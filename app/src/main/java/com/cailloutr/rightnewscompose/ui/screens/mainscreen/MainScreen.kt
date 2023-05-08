@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
@@ -23,6 +25,8 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -38,6 +42,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,6 +54,7 @@ import com.cailloutr.rightnewscompose.model.ChipItem
 import com.cailloutr.rightnewscompose.model.toChipItem
 import com.cailloutr.rightnewscompose.other.Status
 import com.cailloutr.rightnewscompose.ui.components.SearchBar
+import com.cailloutr.rightnewscompose.ui.components.SectionChipGroup
 import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
 import com.cailloutr.rightnewscompose.ui.viewmodel.NewsViewModel
 import com.cailloutr.rightnewscompose.util.DateUtil
@@ -61,6 +67,7 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     modifier: Modifier = Modifier,
     navigateToDetails: (String) -> Unit,
+    navigateToAllSections: () -> Unit,
     snackbarHostState: SnackbarHostState,
     context: Context,
     viewModel: NewsViewModel = hiltViewModel(),
@@ -73,9 +80,17 @@ fun MainScreen(
         onRefresh = {
             viewModel.refreshData() { response ->
                 val message: Int? = when (response.status) {
-                    Status.ERROR -> { R.string.network_connection_error }
-                    Status.SUCCESS -> { R.string.up_to_date }
-                    else -> {null}
+                    Status.ERROR -> {
+                        R.string.network_connection_error
+                    }
+
+                    Status.SUCCESS -> {
+                        R.string.up_to_date
+                    }
+
+                    else -> {
+                        null
+                    }
                 }
 
                 scope.launch {
@@ -86,6 +101,8 @@ fun MainScreen(
             }
         }
     )
+
+    val lazyListState = rememberLazyListState()
 
     MainScreen(
         latestNewsState = uiState.latestNews?.results ?: listOf(),
@@ -105,6 +122,7 @@ fun MainScreen(
                             )
                         }
                     }
+
                     else -> {}
                 }
             }
@@ -112,6 +130,10 @@ fun MainScreen(
         onArticleClickListener = { id ->
             navigateToDetails(id)
         },
+        allSectionsClickListener = {
+            navigateToAllSections()
+        },
+        lazyListState = lazyListState,
         selectedSection = uiState.selectedSection,
         pullRefreshState = pullRefreshState,
         modifier = modifier
@@ -131,14 +153,17 @@ fun MainScreen(
     seeAllOnClick: () -> Unit = {},
     onSectionSelectedListener: (String) -> Unit = {},
     onArticleClickListener: (String) -> Unit = {},
+    allSectionsClickListener: () -> Unit = {},
     pullRefreshState: PullRefreshState,
     isRefreshingAll: Boolean,
+    lazyListState: LazyListState
 ) {
     Box(
         modifier = modifier
             .pullRefresh(pullRefreshState)
     ) {
         LazyColumn(
+            state = lazyListState,
             modifier = modifier
                 .padding(start = 16.dp, top = 16.dp, end = 16.dp)
         ) {
@@ -204,7 +229,25 @@ fun MainScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clipToBounds()
-                )
+                ) {
+                    AssistChip(
+                        onClick = {
+                            allSectionsClickListener()
+                        },
+                        label = {
+                            Text(text = stringResource(R.string.all_sections))
+                        },
+                        colors = AssistChipDefaults.assistChipColors(
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            labelColor = MaterialTheme.colorScheme.primary
+                        ),
+                        border = AssistChipDefaults.assistChipBorder(
+                            borderColor = MaterialTheme.colorScheme.primary
+                        ),
+                        modifier = modifier
+                            .padding(horizontal = 8.dp)
+                    )
+                }
                 Spacer(modifier = Modifier.size(8.dp))
                 if (isRefreshingSectionsNewsState) {
                     Column(
@@ -304,7 +347,9 @@ fun MainScreenPreview() {
     }
     val pullRefreshState = rememberPullRefreshState(
         refreshing = true,
-        onRefresh = {  })
+        onRefresh = { })
+
+    val lazyListState = rememberLazyListState()
 
     RightNewsComposeTheme {
         Surface {
@@ -315,6 +360,7 @@ fun MainScreenPreview() {
                 isRefreshingSectionsNewsState = false,
                 pullRefreshState = pullRefreshState,
                 isRefreshingAll = true,
+                lazyListState = lazyListState
             )
         }
     }
@@ -383,7 +429,10 @@ fun DarkMainScreenPreview() {
     }
     val pullRefreshState = rememberPullRefreshState(
         refreshing = true,
-        onRefresh = {  })
+        onRefresh = { })
+
+    val lazyListState = rememberLazyListState()
+
     RightNewsComposeTheme {
         Surface {
             MainScreen(
@@ -393,6 +442,7 @@ fun DarkMainScreenPreview() {
                 isRefreshingSectionsNewsState = false,
                 pullRefreshState = pullRefreshState,
                 isRefreshingAll = true,
+                lazyListState = lazyListState
             )
         }
     }

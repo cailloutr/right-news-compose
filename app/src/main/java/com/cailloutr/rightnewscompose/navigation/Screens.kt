@@ -43,6 +43,12 @@ sealed class DetailsScreen(val route: String) {
         }
     }
 }
+
+sealed class AllSectionsScreen(val route: String) {
+
+    object AllSections :
+        AllSectionsScreen("all_sections_screen")
+}
 object Args {
     const val ARTICLE_ID = "articleId"
 }

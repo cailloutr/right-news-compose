@@ -7,6 +7,10 @@ class RightNewsNavigationActions(navController: NavController) {
         val route = DetailsScreen.Details.withArgs(id)
         navController.navigate(route)
     }
+    val navigateToAllSections: () -> Unit = {
+        val route = AllSectionsScreen.AllSections.route
+        navController.navigate(route)
+    }
     val navigateUp: () -> Unit = {
         navController.navigateUp()
     }
