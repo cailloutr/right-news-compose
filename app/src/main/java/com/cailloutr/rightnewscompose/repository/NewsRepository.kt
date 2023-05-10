@@ -77,9 +77,9 @@ class NewsRepository @Inject constructor(
                     database.sectionDao.insertSection(*listRoomSections.toTypedArray())
                 }
             }
-        } else {
-            responseStatus(response)
         }
+        responseStatus(response)
+
     }
 
     override suspend fun refreshSections(
