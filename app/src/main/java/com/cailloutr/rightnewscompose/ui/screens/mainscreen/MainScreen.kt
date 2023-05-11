@@ -49,10 +49,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cailloutr.rightnewscompose.R
+import com.cailloutr.rightnewscompose.constants.Constants.LATEST_NEWS
+import com.cailloutr.rightnewscompose.constants.Constants.LATEST_NEWS_TITLE
 import com.cailloutr.rightnewscompose.model.Article
 import com.cailloutr.rightnewscompose.model.ChipItem
 import com.cailloutr.rightnewscompose.model.toChipItem
 import com.cailloutr.rightnewscompose.other.Status
+import com.cailloutr.rightnewscompose.other.getNetworkMessage
 import com.cailloutr.rightnewscompose.ui.components.SearchBar
 import com.cailloutr.rightnewscompose.ui.components.SectionChipGroup
 import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
@@ -68,6 +71,7 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     navigateToDetails: (String) -> Unit,
     navigateToAllSections: () -> Unit,
+    navigateToLatestNews: (String, String) -> Unit,
     snackbarHostState: SnackbarHostState,
     context: Context,
     viewModel: NewsViewModel = hiltViewModel(),
@@ -79,19 +83,7 @@ fun MainScreen(
         refreshing = uiState.isRefreshingAll,
         onRefresh = {
             viewModel.refreshData() { response ->
-                val message: Int? = when (response.status) {
-                    Status.ERROR -> {
-                        R.string.network_connection_error
-                    }
-
-                    Status.SUCCESS -> {
-                        R.string.up_to_date
-                    }
-
-                    else -> {
-                        null
-                    }
-                }
+                val message: Int? = response.status.getNetworkMessage()
 
                 scope.launch {
                     message?.let {
@@ -110,7 +102,7 @@ fun MainScreen(
         mainSectionsState = uiState.sections.map { it.toChipItem() },
         isRefreshingSectionsNewsState = uiState.isRefreshingSectionArticles,
         isRefreshingAll = uiState.isRefreshingAll,
-        onSectionSelectedListener = { id ->
+        onSectionSelectedListener = { id, _ ->
             viewModel.setSelectedSection(id)
             viewModel.getNewsBySection { response ->
                 when (response.status) {
@@ -133,6 +125,9 @@ fun MainScreen(
         allSectionsClickListener = {
             navigateToAllSections()
         },
+        seeAllOnClick = { id, title ->
+            navigateToLatestNews(id, title)
+        },
         lazyListState = lazyListState,
         selectedSection = uiState.selectedSection,
         pullRefreshState = pullRefreshState,
@@ -150,13 +145,13 @@ fun MainScreen(
     isRefreshingSectionsNewsState: Boolean,
     modifier: Modifier = Modifier,
     selectedSection: String = "",
-    seeAllOnClick: () -> Unit = {},
-    onSectionSelectedListener: (String) -> Unit = {},
+    seeAllOnClick: (String, String) -> Unit = { _, _ -> },
+    onSectionSelectedListener: (String, String) -> Unit = { _, _ -> },
     onArticleClickListener: (String) -> Unit = {},
     allSectionsClickListener: () -> Unit = {},
     pullRefreshState: PullRefreshState,
     isRefreshingAll: Boolean,
-    lazyListState: LazyListState
+    lazyListState: LazyListState,
 ) {
     Box(
         modifier = modifier
@@ -190,7 +185,7 @@ fun MainScreen(
                         modifier = Modifier
                             .align(Alignment.Bottom)
                             .clickable {
-                                seeAllOnClick()
+                                seeAllOnClick(LATEST_NEWS, LATEST_NEWS_TITLE)
                             }
                     ) {
                         Text(
@@ -223,8 +218,8 @@ fun MainScreen(
                 SectionChipGroup(
                     list = mainSectionsState,
                     selectedSection = selectedSection,
-                    onItemSelectedListener = { id ->
-                        onSectionSelectedListener(id)
+                    onItemSelectedListener = { id, title ->
+                        onSectionSelectedListener(id, title)
                     },
                     modifier = Modifier
                         .fillMaxWidth()

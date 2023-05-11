@@ -20,8 +20,9 @@ import com.cailloutr.rightnewscompose.ui.uistate.AllSectionsUiState
 
 @Composable
 fun AllSectionsScreen(
-    modifier: Modifier = Modifier,
     uiState: AllSectionsUiState,
+    navigateToLatestNewsScreen: (String, String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
 
     val lazyListState = rememberLazyListState()
@@ -29,6 +30,9 @@ fun AllSectionsScreen(
     AllSectionsScreen(
         uiState = uiState,
         lazyListState = lazyListState,
+        navigateToLatestNewsScreen = { id, title ->
+            navigateToLatestNewsScreen(id, title)
+        },
         modifier = modifier
     )
 }
@@ -39,6 +43,7 @@ fun AllSectionsScreen(
     modifier: Modifier = Modifier,
     uiState: AllSectionsUiState,
     lazyListState: LazyListState,
+    navigateToLatestNewsScreen: (String, String) -> Unit,
 ) {
     val list = uiState.sectionsByIndex
 
@@ -55,8 +60,8 @@ fun AllSectionsScreen(
                 lazyStaggeredGridState = rememberLazyStaggeredGridState(),
                 contentPadding = 8f,
                 section = list[sectionIndex],
-                onClick = {
-                    //TODO: Navigate to LatestNewsScreen
+                onClick = { id, title ->
+                    navigateToLatestNewsScreen(id, title)
                 },
                 modifier = Modifier
                     .padding(vertical = 8.dp)
@@ -89,6 +94,7 @@ fun AllSectionsScreenPreview() {
                     )
                 }
             ),
+            navigateToLatestNewsScreen = { _, _ -> },
             lazyListState = lazyListState,
         )
     }
@@ -117,6 +123,7 @@ fun DarkAllSectionsScreenPreview() {
                     )
                 }
             ),
+            navigateToLatestNewsScreen = { _, _ -> },
             lazyListState = lazyListState,
         )
     }

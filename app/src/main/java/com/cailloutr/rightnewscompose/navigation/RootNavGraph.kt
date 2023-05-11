@@ -27,4 +27,5 @@ object Graph {
     const val HOME = "home_graph"
     const val DETAILS = "details_graph"
     const val ALL_SECTIONS = "all_sections_graph"
+    const val LATEST_NEWS = "latest_news_graph"
 }

@@ -16,8 +16,8 @@ data class NewsResult(
     val apiUrl: String,
     val fields: NewsFields,
     val isHosted: Boolean,
-    val pillarId: String,
-    val pillarName: String,
+    val pillarId: String = "",
+    val pillarName: String = "",
 )
 
 fun NewsResult.toArticle() = Article(

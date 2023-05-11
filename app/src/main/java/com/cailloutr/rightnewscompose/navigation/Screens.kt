@@ -49,6 +49,22 @@ sealed class AllSectionsScreen(val route: String) {
     object AllSections :
         AllSectionsScreen("all_sections_screen")
 }
+
+sealed class LatestNewsScreen(val route: String) {
+    object LatestNews : LatestNewsScreen("latest_news_screen")
+
+    fun withArgs(vararg args: String): String {
+        return buildString {
+            append(route)
+            args.forEach { arg ->
+                append("/${arg.toRouteId()}")
+            }
+        }
+    }
+}
+
 object Args {
     const val ARTICLE_ID = "articleId"
+    const val SECTION_ID = "sectionId"
+    const val SECTION_TITLE = "sectionTitle"
 }

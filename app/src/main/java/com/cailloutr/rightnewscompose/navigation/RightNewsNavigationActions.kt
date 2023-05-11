@@ -3,6 +3,11 @@ package com.cailloutr.rightnewscompose.navigation
 import androidx.navigation.NavController
 
 class RightNewsNavigationActions(navController: NavController) {
+    val navigateToLatestNews: (id: String, title: String) -> Unit = { id, title ->
+        val route = LatestNewsScreen.LatestNews.withArgs(id, title)
+        navController.navigate(route)
+    }
+
     val navigateToDetails: (id: String) -> Unit = { id ->
         val route = DetailsScreen.Details.withArgs(id)
         navController.navigate(route)

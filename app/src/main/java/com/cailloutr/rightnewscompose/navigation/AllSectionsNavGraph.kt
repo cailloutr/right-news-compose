@@ -22,6 +22,9 @@ fun NavGraphBuilder.allSectionsNavGraph(
             val uiState = viewModel.uiState.collectAsState()
             AllSectionsScreen(
                 uiState = uiState.value,
+                navigateToLatestNewsScreen = { id, title ->
+                    navigationActions.navigateToLatestNews(id, title)
+                }
             )
         }
     }

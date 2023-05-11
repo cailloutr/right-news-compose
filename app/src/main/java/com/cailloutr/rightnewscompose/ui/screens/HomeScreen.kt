@@ -25,8 +25,9 @@ import com.cailloutr.rightnewscompose.R
 import com.cailloutr.rightnewscompose.navigation.AllSectionsScreen
 import com.cailloutr.rightnewscompose.navigation.BottomBarScreens
 import com.cailloutr.rightnewscompose.navigation.HomeNavGraph
+import com.cailloutr.rightnewscompose.navigation.RightNewsNavigationActions
 import com.cailloutr.rightnewscompose.ui.components.BottomNavigationBar
-import com.cailloutr.rightnewscompose.ui.components.RightNewsMainAppbar
+import com.cailloutr.rightnewscompose.ui.components.CenterAlignedTopAppBar
 import com.cailloutr.rightnewscompose.ui.components.SmallAppBar
 import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
 
@@ -37,6 +38,7 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
     val appBarState = rememberTopAppBarState()
     val enterAlwaysScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(appBarState)
     val scrollBehavior = remember { enterAlwaysScrollBehavior }
+    val navigationActions = RightNewsNavigationActions(navController)
 
     val screens = listOf(
         BottomBarScreens.Main,
@@ -55,10 +57,11 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
     val snackbarHostState = remember {
         SnackbarHostState()
     }
+
     Scaffold(
         topBar = {
             AnimatedVisibility(visible = appBarDestination) {
-                RightNewsMainAppbar(
+                CenterAlignedTopAppBar(
                     title = stringResource(id = R.string.app_name),
                     scrollBehavior = scrollBehavior
                 )
@@ -66,7 +69,7 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
             AnimatedVisibility(visible = isAllSectionsDestination) {
                 SmallAppBar(
                     title = stringResource(id = R.string.all_sections),
-                    navigationIcon = { navController.navigateUp() },
+                    navigationIcon = { navigationActions.navigateUp() },
                     scrollBehavior = scrollBehavior
                 )
             }

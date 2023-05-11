@@ -16,7 +16,7 @@ import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RightNewsMainAppbar(
+fun CenterAlignedTopAppBar(
     title: String,
     modifier: Modifier = Modifier,
     navigationIcon: @Composable () -> Unit = {},
@@ -50,7 +50,7 @@ fun SmallAppBar(
             Text(
                 text = title,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
         },
         navigationIcon = {
@@ -75,7 +75,7 @@ fun RightNewsAppbarPreview() {
     val scrollBehavior = remember { enterAlwaysScrollBehavior }
     RightNewsComposeTheme {
         Surface {
-            RightNewsMainAppbar(title = "Right News", scrollBehavior = scrollBehavior)
+            CenterAlignedTopAppBar(title = "Right News", scrollBehavior = scrollBehavior)
         }
     }
 }
@@ -90,7 +90,7 @@ fun DarkRightNewsAppbarPreview() {
     val scrollBehavior = remember { enterAlwaysScrollBehavior }
     RightNewsComposeTheme {
         Surface {
-            RightNewsMainAppbar(title = "Right News", scrollBehavior = scrollBehavior)
+            CenterAlignedTopAppBar(title = "Right News", scrollBehavior = scrollBehavior)
         }
     }
 }
@@ -119,10 +119,9 @@ fun DarkSmallAppBarPreview() {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     RightNewsComposeTheme {
         Surface {
-
             SmallAppBar(
                 title = "All Sections",
-                navigationIcon = {  },
+                navigationIcon = { },
                 scrollBehavior = scrollBehavior
             )
         }

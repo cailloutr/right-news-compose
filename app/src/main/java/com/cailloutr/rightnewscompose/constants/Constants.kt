@@ -12,6 +12,8 @@ object Constants {
 
     const val LATEST_NEWS = "latest_news"
 
+    const val LATEST_NEWS_TITLE = "Latest News"
+
     const val FIRST_SECTIONS_ID = "books"
 
     val DEFAULT_SECTIONS = listOf(

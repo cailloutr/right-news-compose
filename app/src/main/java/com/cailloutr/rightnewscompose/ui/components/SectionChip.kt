@@ -31,9 +31,9 @@ import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
 fun SectionChipGroup(
     list: List<ChipItem>,
     selectedSection: String?,
-    onItemSelectedListener: (String) -> Unit,
+    onItemSelectedListener: (String, String) -> Unit,
     modifier: Modifier = Modifier,
-    ChipItem: @Composable RowScope.() -> Unit = {}
+    ChipItem: @Composable RowScope.() -> Unit = {},
 ) {
     val horizontalScrollState = rememberScrollState()
     Row(
@@ -44,7 +44,7 @@ fun SectionChipGroup(
                 SectionChip(
                     id = "",
                     text = "",
-                    onClickItem = {},
+                    onClickItem = { _, _ -> },
                     modifier = Modifier.widthIn(80.dp)
                 )
             }
@@ -53,8 +53,8 @@ fun SectionChipGroup(
                 SectionChip(
                     id = it.id,
                     text = it.text,
-                    onClickItem = { id ->
-                        onItemSelectedListener(id)
+                    onClickItem = { id, title ->
+                        onItemSelectedListener(id, title)
                     },
                     isChecked = it.id == selectedSection,
                     modifier = Modifier.padding(horizontal = 8.dp)
@@ -72,7 +72,7 @@ fun SectionChip(
     text: String,
     modifier: Modifier = Modifier,
     isChecked: Boolean = false,
-    onClickItem: (String) -> Unit,
+    onClickItem: (String, String) -> Unit = { _, _ -> },
     onPrimary: Color = MaterialTheme.colorScheme.onPrimary,
     primary: Color = MaterialTheme.colorScheme.primary,
     surface: Color = MaterialTheme.colorScheme.onPrimary,
@@ -105,7 +105,7 @@ fun SectionChip(
             )
         },
         selected = isChecked,
-        onClick = { onClickItem(id) },
+        onClick = { onClickItem(id, text) },
         colors = FilterChipDefaults.filterChipColors(
             selectedContainerColor = selectedContainer,
             selectedLabelColor = selectedLabel,
@@ -125,7 +125,7 @@ fun SectionChipPreview() {
                 id = "news",
                 text = "News",
                 isChecked = true,
-                onClickItem = {}
+                onClickItem = { _, _ -> }
             )
         }
     }
@@ -141,7 +141,7 @@ fun DarkSectionChipPreview() {
                 id = "news",
                 text = "News",
                 isChecked = false,
-                onClickItem = {}
+                onClickItem = { _, _ -> }
             )
         }
     }
@@ -156,7 +156,8 @@ fun SectionChipGroupPreview() {
                 ChipItem(it.toString(), it.toString())
             },
             selectedSection = "3",
-            onItemSelectedListener = {})
+            onItemSelectedListener = { _, _ -> }
+        )
     }
 }
 
@@ -169,7 +170,7 @@ fun DarkSectionChipGroupPreview() {
                 ChipItem(it.toString(), it.toString())
             },
             selectedSection = "3",
-            onItemSelectedListener = {})
+            onItemSelectedListener = { _, _ -> })
     }
 }
 
@@ -180,6 +181,6 @@ fun EmptySectionChipGroupPreview() {
         SectionChipGroup(
             list = listOf(),
             selectedSection = "3",
-            onItemSelectedListener = {})
+            onItemSelectedListener = { _, _ -> })
     }
 }

@@ -37,7 +37,7 @@ fun SectionsByIndex(
     contentPadding: Float,
     section: SectionsByIndex,
     modifier: Modifier = Modifier,
-    onClick: (String) -> Unit = {}
+    onClick: (String, String) -> Unit = { _, _ -> },
 ) {
     // IndexHeight + rowCount * ChipHeight + (rows - 1) * contentPadding
     val gridHeight = 32 + rows * 40 + (rows - 1).coerceAtLeast(1) * contentPadding
@@ -63,15 +63,15 @@ fun SectionsByIndex(
             contentPadding = PaddingValues(contentPadding.dp),
             verticalArrangement = Arrangement.spacedBy(contentPadding.dp),
             horizontalItemSpacing = contentPadding.dp,
-            modifier =  Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize()
 
         ) {
-            items(section.list) {section ->
+            items(section.list) { section ->
                 SectionChip(
                     id = section.id,
                     text = section.title,
-                    onClickItem = {
-                        onClick(it)
+                    onClickItem = { id, title ->
+                        onClick(id, title)
                     },
                     border = FilterChipDefaults.filterChipBorder(
                         borderColor = MaterialTheme.colorScheme.primary

@@ -17,8 +17,11 @@ import com.cailloutr.rightnewscompose.ui.viewmodel.DetailsViewModel
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeNavGraph(navController: NavHostController, snackbarHostState: SnackbarHostState) {
+
     val viewModel = hiltViewModel<DetailsViewModel>()
     val allSectionsViewModel = hiltViewModel<AllSectionsViewModel>()
+//    val latestNewsViewModel = hiltViewModel<LatestNewsViewModel>()
+
     val navigationActions = RightNewsNavigationActions(navController)
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
@@ -36,6 +39,9 @@ fun HomeNavGraph(navController: NavHostController, snackbarHostState: SnackbarHo
                 navigateToAllSections = {
                     navigationActions.navigateToAllSections()
                 },
+                navigateToLatestNews = { id, title ->
+                    navigationActions.navigateToLatestNews(id, title)
+                },
                 snackbarHostState = snackbarHostState,
                 context = context
             )
@@ -51,6 +57,11 @@ fun HomeNavGraph(navController: NavHostController, snackbarHostState: SnackbarHo
         allSectionsNavGraph(
             navigationActions = navigationActions,
             viewModel = allSectionsViewModel
+        )
+        latestNewsNavGraph(
+            navigationActions = navigationActions,
+            snackbarHostState = snackbarHostState,
+            context = context
         )
     }
 }

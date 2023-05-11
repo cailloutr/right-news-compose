@@ -1,5 +1,7 @@
 package com.cailloutr.rightnewscompose.other
 
+import com.cailloutr.rightnewscompose.R
+
 data class Resource<out T>(
     val status: Status,
     val data: T?,
@@ -24,4 +26,18 @@ data class Resource<out T>(
 
 enum class Status {
     SUCCESS, ERROR, LOADING
+}
+
+fun Status.getNetworkMessage() = when (this) {
+    Status.ERROR -> {
+        R.string.network_connection_error
+    }
+
+    Status.SUCCESS -> {
+        R.string.up_to_date
+    }
+
+    else -> {
+        null
+    }
 }
