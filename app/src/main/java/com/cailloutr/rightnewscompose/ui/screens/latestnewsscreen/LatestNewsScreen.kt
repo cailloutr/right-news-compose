@@ -153,7 +153,12 @@ fun LatestNewsScreen(
                 }
             } else {
                 uiState.latestNews?.results?.size?.let { size ->
-                    items(size) { index ->
+                    items(
+                        count = size,
+                        key = {
+                            uiState.latestNews!!.results[it].id
+                        }
+                    ) { index ->
                         NewsSectionsCard(
                             title = uiState.latestNews!!.results[index].webTitle,
                             trailText = uiState.latestNews!!.results[index].trailText!!,

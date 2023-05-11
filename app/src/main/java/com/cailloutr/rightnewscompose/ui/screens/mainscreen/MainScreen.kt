@@ -254,7 +254,10 @@ fun MainScreen(
                 }
             }
 
-            items(sectionNewsState) { article ->
+            items(
+                items = sectionNewsState,
+                key = { article -> article.id }
+            ) { article ->
                 NewsSectionsCard(
                     title = article.webTitle,
                     trailText = article.trailText!!,
