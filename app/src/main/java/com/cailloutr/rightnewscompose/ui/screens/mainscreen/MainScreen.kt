@@ -1,6 +1,5 @@
 package com.cailloutr.rightnewscompose.ui.screens.mainscreen
 
-import android.content.Context
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -30,15 +29,12 @@ import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
@@ -46,22 +42,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cailloutr.rightnewscompose.R
 import com.cailloutr.rightnewscompose.constants.Constants.LATEST_NEWS
 import com.cailloutr.rightnewscompose.constants.Constants.LATEST_NEWS_TITLE
 import com.cailloutr.rightnewscompose.model.Article
 import com.cailloutr.rightnewscompose.model.ChipItem
 import com.cailloutr.rightnewscompose.model.toChipItem
-import com.cailloutr.rightnewscompose.other.Status
-import com.cailloutr.rightnewscompose.other.getNetworkMessage
 import com.cailloutr.rightnewscompose.ui.components.SearchBar
 import com.cailloutr.rightnewscompose.ui.components.SectionChipGroup
 import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
-import com.cailloutr.rightnewscompose.ui.viewmodel.NewsViewModel
+import com.cailloutr.rightnewscompose.ui.uistate.MainScreenUiState
 import com.cailloutr.rightnewscompose.util.DateUtil
-import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -72,27 +63,10 @@ fun MainScreen(
     navigateToDetails: (String) -> Unit,
     navigateToAllSections: () -> Unit,
     navigateToLatestNews: (String, String) -> Unit,
-    snackbarHostState: SnackbarHostState,
-    context: Context,
-    viewModel: NewsViewModel = hiltViewModel(),
+    uiState: MainScreenUiState,
+    pullRefreshState: PullRefreshState,
+    onSectionSelectedListener: (String, String) -> Unit,
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val scope = rememberCoroutineScope()
-
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = uiState.isRefreshingAll,
-        onRefresh = {
-            viewModel.refreshData() { response ->
-                val message: Int? = response.status.getNetworkMessage()
-
-                scope.launch {
-                    message?.let {
-                        snackbarHostState.showSnackbar(context.getString(it))
-                    }
-                }
-            }
-        }
-    )
 
     val lazyListState = rememberLazyListState()
 
@@ -102,22 +76,8 @@ fun MainScreen(
         mainSectionsState = uiState.sections.map { it.toChipItem() },
         isRefreshingSectionsNewsState = uiState.isRefreshingSectionArticles,
         isRefreshingAll = uiState.isRefreshingAll,
-        onSectionSelectedListener = { id, _ ->
-            viewModel.setSelectedSection(id)
-            viewModel.getNewsBySection { response ->
-                when (response.status) {
-                    Status.ERROR -> {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = context.getString(R.string.network_connection_error),
-                                duration = SnackbarDuration.Short
-                            )
-                        }
-                    }
-
-                    else -> {}
-                }
-            }
+        onSectionSelectedListener = { id, title ->
+            onSectionSelectedListener(id, title)
         },
         onArticleClickListener = { id ->
             navigateToDetails(id)
