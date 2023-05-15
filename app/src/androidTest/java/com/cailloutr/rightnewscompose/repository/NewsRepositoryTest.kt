@@ -300,8 +300,5 @@ class NewsRepositoryTest {
             database.articleDao.getAllArticlesFromSection(section.sectionName).first()
 
         assertThat(sections).isEmpty()
-
-
     }
-
 }

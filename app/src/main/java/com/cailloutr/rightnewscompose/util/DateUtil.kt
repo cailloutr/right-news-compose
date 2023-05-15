@@ -6,6 +6,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.*
 
 
@@ -23,15 +24,15 @@ object DateUtil {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getFormattedDate(date: String): String {
-        val instant = Instant.parse(date)
+        val instant = try {
+            Instant.parse(date)
+        } catch (e: DateTimeParseException) {
+            return date
+        }
         val zoneId = ZoneId.systemDefault()
         val localDateTime = LocalDateTime.ofInstant(instant, zoneId)
         val formatter =
             DateTimeFormatter.ofPattern("EEE, d MMM, yyyy - HH:mm - z", Locale.getDefault())
-        return try {
-            localDateTime.atZone(zoneId).format(formatter)
-        } catch (e: Exception) {
-            date
-        }
+        return localDateTime.atZone(zoneId).format(formatter)
     }
 }
