@@ -1,5 +1,6 @@
 package com.cailloutr.rightnewscompose.data.remote
 
+import com.cailloutr.rightnewscompose.constants.Constants
 import com.cailloutr.rightnewscompose.enums.OrderBy
 import com.cailloutr.rightnewscompose.data.remote.responses.news.NewsRoot
 import com.cailloutr.rightnewscompose.data.remote.responses.sections.SectionsRoot
@@ -15,8 +16,8 @@ interface TheGuardianService {
 
 
     suspend fun searchNews(
-        orderBy: OrderBy,
-        fields: String,
+        orderBy: String = OrderBy.NEWEST.value,
+        fields: String = Constants.API_CALL_FIELDS,
         searchQuery: String
-    ): NewsRoot
+    ): Resource<NewsRoot>
 }

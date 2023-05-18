@@ -40,7 +40,9 @@ fun NavGraphBuilder.detailsNavGraph(
             viewModel.getArticleById(
                 it.arguments?.getString(Args.ARTICLE_ID, "")?.fromRouteId() ?: ""
             )
+
             Log.i("DetailsNavGraph", "detailsNavGraph: ${it.arguments?.getString(Args.ARTICLE_ID, "")?.fromRouteId() ?: ""}")
+
             val uiState = viewModel.uiState.collectAsState()
             DetailsScreen(
                 uiState = uiState.value,

@@ -13,6 +13,7 @@ import com.cailloutr.rightnewscompose.usecases.GetArticleByIdUseCase
 import com.cailloutr.rightnewscompose.usecases.GetNewsBySectionUseCase
 import com.cailloutr.rightnewscompose.usecases.GetSectionsUseCase
 import com.cailloutr.rightnewscompose.usecases.NewsUseCases
+import com.cailloutr.rightnewscompose.usecases.SearchNewsUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -80,7 +81,8 @@ object AppModule {
         return NewsUseCases(
             GetSectionsUseCase(repository),
             GetNewsBySectionUseCase(repository),
-            GetArticleByIdUseCase(repository)
+            GetArticleByIdUseCase(repository),
+            SearchNewsUseCase(repository)
         )
     }
 }

@@ -1,9 +1,12 @@
 package com.cailloutr.rightnewscompose.repository
 
+import com.cailloutr.rightnewscompose.constants.Constants
+import com.cailloutr.rightnewscompose.constants.Constants.SEARCH_NEWS
 import com.cailloutr.rightnewscompose.data.local.roommodel.RoomArticle
 import com.cailloutr.rightnewscompose.data.local.roommodel.RoomSection
 import com.cailloutr.rightnewscompose.data.remote.responses.news.NewsRoot
 import com.cailloutr.rightnewscompose.data.remote.responses.sections.SectionsRoot
+import com.cailloutr.rightnewscompose.enums.OrderBy
 import com.cailloutr.rightnewscompose.model.NewsContainer
 import com.cailloutr.rightnewscompose.model.SectionWrapper
 import com.cailloutr.rightnewscompose.other.Resource
@@ -45,4 +48,14 @@ interface NewsRepositoryInterface {
         section: SectionWrapper,
         responseStatus: (Resource<NewsRoot?>) -> Unit,
     )
+
+    suspend fun searchNews(
+        context: CoroutineDispatcher,
+        searchQuery: String,
+        section: SectionWrapper = SectionWrapper(SEARCH_NEWS, SEARCH_NEWS),
+        orderBy: OrderBy = OrderBy.NEWEST,
+        fields: String = Constants.API_CALL_FIELDS,
+        responseStatus: (Resource<NewsRoot?>) -> Unit
+    )
+
 }

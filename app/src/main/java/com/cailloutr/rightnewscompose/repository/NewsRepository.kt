@@ -10,6 +10,7 @@ import com.cailloutr.rightnewscompose.data.remote.responses.news.toRoomArticle
 import com.cailloutr.rightnewscompose.data.remote.responses.news.toRoomNewsContainer
 import com.cailloutr.rightnewscompose.data.remote.responses.sections.SectionsRoot
 import com.cailloutr.rightnewscompose.data.remote.responses.sections.toRoomSections
+import com.cailloutr.rightnewscompose.enums.OrderBy
 import com.cailloutr.rightnewscompose.model.NewsContainer
 import com.cailloutr.rightnewscompose.model.SectionWrapper
 import com.cailloutr.rightnewscompose.other.Resource
@@ -21,7 +22,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-
 
 class NewsRepository @Inject constructor(
     private val database: NewsDatabase,
@@ -122,6 +122,42 @@ class NewsRepository @Inject constructor(
                 withContext(context) {
                     database.newsContainerDao.insert(container)
                     database.articleDao.insertArticle(*articles.toTypedArray())
+                }
+            }
+        }
+        responseStatus(response)
+    }
+
+
+    override suspend fun searchNews(
+        context: CoroutineDispatcher,
+        searchQuery: String,
+        section: SectionWrapper,
+        orderBy: OrderBy,
+        fields: String,
+        responseStatus: (Resource<NewsRoot?>) -> Unit
+    ) {
+        lateinit var response: Resource<NewsRoot>
+        withContext(context) {
+            response = serviceImpl.searchNews(
+                searchQuery = searchQuery,
+                orderBy = orderBy.value,
+                fields = fields
+            )
+        }
+
+        if (response.status == Status.SUCCESS) {
+
+            cleanCache(context, section.sectionName)
+
+            val container = response.data?.response?.toRoomNewsContainer(section.sectionName)
+
+            container?.let {
+                val articles = response.data?.response?.results?.map { it.toRoomArticle(containerId = container.id) }
+
+                withContext(context) {
+                    database.newsContainerDao.insert(container)
+                    articles?.toTypedArray()?.let { articles -> database.articleDao.insertArticle(*articles) }
                 }
             }
         }

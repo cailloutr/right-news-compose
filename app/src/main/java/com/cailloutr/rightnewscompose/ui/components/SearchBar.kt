@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalComposeUiApi::class)
+
 package com.cailloutr.rightnewscompose.ui.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
@@ -15,8 +17,11 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,6 +34,7 @@ fun SearchBar(
     enabled: Boolean,
     onValueChange: (String) -> Unit,
     onSearch: (String) -> Unit,
+    keyboardController: SoftwareKeyboardController?
 ) {
     val containerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
     OutlinedTextField(
@@ -56,7 +62,8 @@ fun SearchBar(
         keyboardActions = KeyboardActions(
             onSearch = {
                 onSearch(text)
-            }
+                keyboardController?.hide()
+            },
         ),
         maxLines = 1,
         modifier = modifier
@@ -75,7 +82,8 @@ fun SearchBarPreview() {
                 text = "",
                 onValueChange = {},
                 onSearch = {},
-                enabled = true
+                enabled = true,
+                keyboardController = LocalSoftwareKeyboardController.current
             )
         }
     }
@@ -91,7 +99,8 @@ fun DarkSearchBarPreview() {
                 text = "",
                 onValueChange = {},
                 onSearch = {},
-                enabled = true
+                enabled = true,
+                keyboardController = LocalSoftwareKeyboardController.current
             )
         }
     }

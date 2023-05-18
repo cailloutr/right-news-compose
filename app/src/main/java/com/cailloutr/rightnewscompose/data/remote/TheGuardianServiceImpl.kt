@@ -1,9 +1,10 @@
 package com.cailloutr.rightnewscompose.data.remote
 
-import com.cailloutr.rightnewscompose.enums.OrderBy
 import com.cailloutr.rightnewscompose.BuildConfig
 import com.cailloutr.rightnewscompose.constants.Constants
 import com.cailloutr.rightnewscompose.data.remote.HttpParams.API_KEY
+import com.cailloutr.rightnewscompose.data.remote.HttpParams.ORDER_BY
+import com.cailloutr.rightnewscompose.data.remote.HttpParams.QUERY
 import com.cailloutr.rightnewscompose.data.remote.HttpParams.SECTION
 import com.cailloutr.rightnewscompose.data.remote.HttpParams.SHOW_FIELDS
 import com.cailloutr.rightnewscompose.data.remote.responses.news.NewsRoot
@@ -45,10 +46,18 @@ class TheGuardianServiceImpl @Inject constructor(
     }
 
     override suspend fun searchNews(
-        orderBy: OrderBy,
+        orderBy: String,
         fields: String,
         searchQuery: String,
-    ): NewsRoot {
-        TODO("Not yet implemented")
+    ): Resource<NewsRoot> {
+        return client.getResponse {
+            it.get {
+                url(HttpRoutes.GET_SEARCH)
+                parameter(key = API_KEY, BuildConfig.API_KEY)
+                parameter(key = ORDER_BY, orderBy)
+                parameter(key = SHOW_FIELDS, fields)
+                parameter(key = QUERY, searchQuery)
+            }
+        }
     }
 }

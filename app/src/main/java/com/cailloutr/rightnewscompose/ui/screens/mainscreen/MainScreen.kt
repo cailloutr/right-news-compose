@@ -36,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.res.stringResource
@@ -63,6 +64,7 @@ fun MainScreen(
     navigateToDetails: (String) -> Unit,
     navigateToAllSections: () -> Unit,
     navigateToLatestNews: (String, String) -> Unit,
+    navigateToSearchScreen: () -> Unit,
     uiState: MainScreenUiState,
     pullRefreshState: PullRefreshState,
     onSectionSelectedListener: (String, String) -> Unit,
@@ -88,6 +90,9 @@ fun MainScreen(
         seeAllOnClick = { id, title ->
             navigateToLatestNews(id, title)
         },
+        onSearchBarClick = {
+            navigateToSearchScreen()
+        },
         lazyListState = lazyListState,
         selectedSection = uiState.selectedSection,
         pullRefreshState = pullRefreshState,
@@ -95,7 +100,9 @@ fun MainScreen(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class,
+    ExperimentalComposeUiApi::class
+)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen(
@@ -112,6 +119,7 @@ fun MainScreen(
     pullRefreshState: PullRefreshState,
     isRefreshingAll: Boolean,
     lazyListState: LazyListState,
+    onSearchBarClick: () -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -126,7 +134,12 @@ fun MainScreen(
                 SearchBar(
                     onValueChange = {},
                     onSearch = {},
-                    enabled = false
+                    enabled = false,
+                    keyboardController = null,
+                    modifier = Modifier
+                        .clickable {
+                            onSearchBarClick()
+                        }
                 )
                 Spacer(modifier = Modifier.size(16.dp))
                 Row(
@@ -318,7 +331,8 @@ fun MainScreenPreview() {
                 isRefreshingSectionsNewsState = false,
                 pullRefreshState = pullRefreshState,
                 isRefreshingAll = true,
-                lazyListState = lazyListState
+                lazyListState = lazyListState,
+                onSearchBarClick = {}
             )
         }
     }
@@ -400,7 +414,8 @@ fun DarkMainScreenPreview() {
                 isRefreshingSectionsNewsState = false,
                 pullRefreshState = pullRefreshState,
                 isRefreshingAll = true,
-                lazyListState = lazyListState
+                lazyListState = lazyListState,
+                onSearchBarClick = {}
             )
         }
     }

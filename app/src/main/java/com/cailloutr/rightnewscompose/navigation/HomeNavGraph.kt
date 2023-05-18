@@ -81,6 +81,9 @@ fun HomeNavGraph(navController: NavHostController, snackbarHostState: SnackbarHo
                     navigationActions.navigateToLatestNews(id, title)
                 },
                 pullRefreshState = pullRefreshState,
+                navigateToSearchScreen = {
+                    navigationActions.navigateToSearchNewsScreen()
+                },
                 onSectionSelectedListener = { id, _ ->
                     viewModel.setSelectedSection(id)
                     viewModel.getNewsBySection { response ->
@@ -112,6 +115,11 @@ fun HomeNavGraph(navController: NavHostController, snackbarHostState: SnackbarHo
             viewModel = allSectionsViewModel
         )
         latestNewsNavGraph(
+            navigationActions = navigationActions,
+            snackbarHostState = snackbarHostState,
+            context = context
+        )
+        searchNewsNavGraph(
             navigationActions = navigationActions,
             snackbarHostState = snackbarHostState,
             context = context

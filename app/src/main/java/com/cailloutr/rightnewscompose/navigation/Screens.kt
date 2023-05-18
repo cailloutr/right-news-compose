@@ -63,6 +63,10 @@ sealed class LatestNewsScreen(val route: String) {
     }
 }
 
+sealed class SearchNewsScreen(val route: String) {
+    object Search : SearchNewsScreen("search_news_screen")
+}
+
 object Args {
     const val ARTICLE_ID = "articleId"
     const val SECTION_ID = "sectionId"
