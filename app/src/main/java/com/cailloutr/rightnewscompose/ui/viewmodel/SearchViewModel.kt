@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-//TODO: Tests
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val dispatchers: DispatchersProvider,

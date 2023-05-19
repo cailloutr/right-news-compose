@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.cailloutr.rightnewscompose.ui.screens.HomeScreen
 
+//TODO: Test navigation
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun RootNavGraph(navController: NavHostController) {

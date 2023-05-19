@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.filters.SmallTest
 import com.cailloutr.rightnewscompose.TestCoroutineDispatcher
 import com.cailloutr.rightnewscompose.TestsConstants
+import com.cailloutr.rightnewscompose.constants.Constants.SEARCH_NEWS
 import com.cailloutr.rightnewscompose.data.local.NewsDatabase
 import com.cailloutr.rightnewscompose.data.remote.TheGuardianServiceImpl
 import com.cailloutr.rightnewscompose.data.remote.responses.news.NewsFields
@@ -298,6 +299,62 @@ class NewsRepositoryTest {
 
         sections =
             database.articleDao.getAllArticlesFromSection(section.sectionName).first()
+
+        assertThat(sections).isEmpty()
+    }
+
+    @Test
+    fun test_searchArticlesShouldUpdateDatabase() = runTest {
+
+        val section = SectionWrapper(SEARCH_NEWS, SEARCH_NEWS)
+        val searchQuery = "searchQuery"
+
+        val response = Resource.success(data = TestsConstants.fakeArticle)
+
+        coEvery { serviceImpl.searchNews(any(), any(), searchQuery) } returns response
+
+        repository.searchNews(
+            context = testDispatcher.main,
+            searchQuery = searchQuery,
+            responseStatus = {}
+        )
+
+        val container =
+            database.newsContainerDao.getNewsContainer(section.sectionName).first()
+        val sections =
+            database.articleDao.getAllArticlesFromSection(section.sectionName).first()
+
+        assertThat(container?.currentPage).isEqualTo(response.data?.response?.currentPage)
+        assertThat(container?.orderBy).isEqualTo(response.data?.response?.orderBy)
+        assertThat(container?.pages).isEqualTo(response.data?.response?.pages)
+        assertThat(container?.pageSize).isEqualTo(response.data?.response?.pageSize)
+        assertThat(container?.startIndex).isEqualTo(response.data?.response?.startIndex)
+        assertThat(container?.total).isEqualTo(response.data?.response?.total)
+
+        assertThat(sections).containsExactlyElementsIn(response.data?.response?.results?.map {
+            it.toRoomArticle(
+                container?.id!!
+            )
+        })
+    }
+
+    @Test
+    fun test_searchArticlesWhenResponseIsErrorShouldNotUpdateDatabase() = runTest {
+        val section = SectionWrapper(SEARCH_NEWS, SEARCH_NEWS)
+        val searchQuery = "searchQuery"
+
+        coEvery { serviceImpl.searchNews(any(), any(), searchQuery) } returns (Resource.error(
+            msg = "Error",
+            data = null
+        ))
+
+        repository.searchNews(
+            context = testDispatcher.main,
+            searchQuery = searchQuery,
+            responseStatus = {}
+        )
+
+        val sections = database.articleDao.getAllArticlesFromSection(section.sectionName).first()
 
         assertThat(sections).isEmpty()
     }

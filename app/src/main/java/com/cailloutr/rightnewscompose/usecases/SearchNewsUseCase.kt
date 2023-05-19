@@ -10,7 +10,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-//TODO: Tests
 class SearchNewsUseCase @Inject constructor(
     private val repository: NewsRepositoryInterface,
 ) {
