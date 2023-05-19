@@ -36,7 +36,7 @@ import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
 @Composable
 fun HomeScreen(navController: NavHostController = rememberNavController()) {
     val appBarState = rememberTopAppBarState()
-    val enterAlwaysScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(appBarState)
+    val enterAlwaysScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(appBarState)
     val scrollBehavior = remember { enterAlwaysScrollBehavior }
     val navigationActions = RightNewsNavigationActions(navController)
 
