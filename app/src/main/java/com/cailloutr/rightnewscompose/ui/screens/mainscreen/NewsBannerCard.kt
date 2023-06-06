@@ -3,8 +3,10 @@ package com.cailloutr.rightnewscompose.ui.screens.mainscreen
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.PagerSnapDistance
 import androidx.compose.foundation.pager.rememberPagerState
@@ -35,7 +37,13 @@ fun BannerHorizontalPager(
     onClickListener: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState(
+        initialPage = 0,
+        initialPageOffsetFraction = 0f
+    ) {
+        // provide pageCount
+        articleList.size
+    }
     val fling = PagerDefaults.flingBehavior(
         state = pagerState,
         pagerSnapDistance = PagerSnapDistance.atMost(10)
@@ -43,21 +51,29 @@ fun BannerHorizontalPager(
 
     Column(modifier = modifier) {
         HorizontalPager(
-            pageCount = articleList.size,
-            pageSpacing = 16.dp,
+            modifier = Modifier,
             state = pagerState,
-            flingBehavior = fling
-        ) { page ->
-            NewsBannerCard(
-                title = articleList[page].webTitle,
-                trailText = articleList[page].trailText.toString(),
-                backgroundImageUrl = articleList[page].thumbnail.toString(),
-                id = articleList[page].id,
-                onClick = {
-                    onClickListener(it)
-                }
-            )
-        }
+            pageSpacing = 16.dp,
+            userScrollEnabled = true,
+            reverseLayout = false,
+            contentPadding = PaddingValues(0.dp),
+            beyondBoundsPageCount = 0,
+            pageSize = PageSize.Fill,
+            flingBehavior = fling,
+            key = null,
+            pageNestedScrollConnection = PagerDefaults.pageNestedScrollConnection(Orientation.Horizontal),
+            pageContent = {page ->
+                NewsBannerCard(
+                    title = articleList[page].webTitle,
+                    trailText = articleList[page].trailText.toString(),
+                    backgroundImageUrl = articleList[page].thumbnail.toString(),
+                    id = articleList[page].id,
+                    onClick = {
+                        onClickListener(it)
+                    }
+                )
+            }
+        )
         Spacer(modifier = Modifier.size(8.dp))
         Row(
             Modifier
