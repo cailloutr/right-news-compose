@@ -69,18 +69,19 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.6.1'
     implementation 'androidx.activity:activity-compose:1.7.1'
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation 'androidx.compose.material3:material3:1.1.0-rc01'
+    implementation 'androidx.compose.material3:material3:1.2.0-alpha01'
     implementation "androidx.compose.material:material:1.4.3"
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha09"
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.28.0"
+    implementation "androidx.tracing:tracing:1.1.0"
 
 
     // Html text composable
@@ -91,6 +92,8 @@ dependencies {
 
     // Navigation
     implementation("androidx.navigation:navigation-compose:$nav_version")
+    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
+
 
     // Room
     implementation("androidx.room:room-runtime:$room_version")
@@ -140,18 +143,23 @@ dependencies {
     androidTestImplementation 'com.google.truth:truth:1.1.3'
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
+
+    androidTestImplementation "androidx.arch.core:core-testing:2.2.0"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.5.1"
+
+    /*androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
     androidTestImplementation "androidx.test.espresso:espresso-intents:$espressoVersion"
     androidTestImplementation "androidx.test.espresso:espresso-accessibility:$espressoVersion"
     androidTestImplementation "androidx.test.espresso:espresso-web:$espressoVersion"
     androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:$espressoVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-idling-resource:$espressoVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-idling-resource:$espressoVersion"*/
+
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
-    androidTestImplementation "androidx.arch.core:core-testing:2.2.0"
     androidTestImplementation 'app.cash.turbine:turbine:0.12.1'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+    androidTestImplementation "androidx.navigation:navigation-testing:$rootProject.nav_version"
+
 
     androidTestImplementation "io.mockk:mockk-android:${mockkVersion}"
     androidTestImplementation "io.mockk:mockk-agent:${mockkVersion}"
@@ -159,6 +167,7 @@ dependencies {
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.44")
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.44")
 
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$rootProject.compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 }
