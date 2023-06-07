@@ -19,9 +19,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -131,7 +134,6 @@ fun DetailsScreen(
         dropDownItems = dropDownItems,
         modifier = modifier
     )
-
 }
 
 
@@ -147,6 +149,9 @@ fun DetailsScreen(
     publicationDate: String,
     title: String,
     body: String,
+    onFavoriteClick: (Boolean) -> Unit = {},
+    modifier: Modifier = Modifier,
+    isFavorite: Boolean = false,
     initialCondition: Boolean,
     onNavigateIconClick: () -> Unit,
     onShareOptionClick: () -> Unit,
@@ -154,7 +159,6 @@ fun DetailsScreen(
     dropDownItems: List<DropDownItem>,
     onStart: () -> Unit,
     onMotionStateProgressChanges: (Float) -> Unit,
-    modifier: Modifier = Modifier,
     motionStateProgress: Float = motionState.currentProgress,
 ) {
     val corners = 50f - ((motionState.currentProgress * 10)).coerceAtLeast(10f)
@@ -334,6 +338,24 @@ fun DetailsScreen(
                 }
             },
             modifier = Modifier.layoutId("more")
+        )
+
+        //TODO: animation
+        ExtendedFloatingActionButton(
+            text = {
+                AnimatedVisibility(visible = isFavorite) {
+                    Text(text = "Favorite")
+                }
+            },
+            icon = {
+                   Icon(
+                       imageVector = Icons.Default.FavoriteBorder,
+                       contentDescription = null
+                   )
+            },
+            expanded = isFavorite,
+            onClick = { /*TODO*/ },
+            modifier = Modifier.layoutId("fab")
         )
     }
 }

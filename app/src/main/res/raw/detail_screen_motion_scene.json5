@@ -47,6 +47,10 @@
         bottom: ['parent', 'bottom'],
         start: ['contentBg', 'start'],
         end: ['contentBg', 'end']
+      },
+      fab: {
+        bottom: ['parent', 'bottom', 16],
+        end: ['parent', 'end', 16],
       }
     },
     end: {
@@ -96,6 +100,10 @@
         bottom: ['parent', 'bottom'],
         start: ['contentBg', 'start'],
         end: ['contentBg', 'end']
+      },
+      fab: {
+        bottom: ['parent', 'bottom', 16],
+        end: ['parent', 'end', 16],
       }
     }
   },
