@@ -17,10 +17,27 @@ class RightNewsNavigationActions(navController: NavController) {
         val route = DetailsScreen.Details.withArgs(id)
         navController.navigate(route)
     }
+
     val navigateToAllSections: () -> Unit = {
         val route = AllSectionsScreen.AllSections.route
         navController.navigate(route)
     }
+
+    val navigateToLogin: () -> Unit = {
+        val route = LoginScreen.Login.route
+        navController.navigate(route)
+    }
+
+    val navigateToSignIn: () -> Unit = {
+        val route = LoginScreen.SignIn.route
+        navController.navigate(route)
+    }
+
+    val navigateToMainScreen: () -> Unit = {
+        val route = BottomBarScreens.Main.route
+        navController.navigate(route)
+    }
+
     val navigateUp: () -> Unit = {
         navController.navigateUp()
     }

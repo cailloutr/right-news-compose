@@ -30,4 +30,5 @@ object Graph {
     const val ALL_SECTIONS = "all_sections_graph"
     const val LATEST_NEWS = "latest_news_graph"
     const val SEARCH_NEWS = "search_news_graph"
+    const val LOGIN = "login_graph"
 }

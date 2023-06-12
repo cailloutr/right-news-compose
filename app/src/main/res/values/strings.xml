@@ -25,4 +25,15 @@
     <string name="nothing_found">Nothing found</string>
     <string name="search_screen_title">Search</string>
     <string name="search_content">Search content</string>
+    <string name="not_logged_message_login_screen">Login to see your profile</string>
+    <string name="login">Login</string>
+    <string name="settings">Settings</string>
+    <string name="logout">Logout</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="dont_have_an_account">Don\'t have an account?</string>
+    <string name="sign_up">Sign up</string>
+    <string name="phone">Phone</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="back_to_news">Back to News</string>
 </resources>

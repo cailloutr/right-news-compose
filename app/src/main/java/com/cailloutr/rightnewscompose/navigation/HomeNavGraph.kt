@@ -21,7 +21,9 @@ import com.cailloutr.rightnewscompose.R
 import com.cailloutr.rightnewscompose.other.Status
 import com.cailloutr.rightnewscompose.other.getNetworkMessage
 import com.cailloutr.rightnewscompose.ui.screens.mainscreen.MainScreen
+import com.cailloutr.rightnewscompose.ui.screens.profilescreen.ProfileScreen
 import com.cailloutr.rightnewscompose.ui.viewmodel.AllSectionsViewModel
+import com.cailloutr.rightnewscompose.ui.viewmodel.LoginViewModel
 import com.cailloutr.rightnewscompose.ui.viewmodel.NewsViewModel
 import kotlinx.coroutines.launch
 
@@ -31,6 +33,7 @@ import kotlinx.coroutines.launch
 fun HomeNavGraph(navController: NavHostController, snackbarHostState: SnackbarHostState) {
 
     val allSectionsViewModel = hiltViewModel<AllSectionsViewModel>()
+    val loginViewModel = hiltViewModel<LoginViewModel>()
 //    val latestNewsViewModel = hiltViewModel<LatestNewsViewModel>()
 
     val navigationActions = RightNewsNavigationActions(navController)
@@ -104,7 +107,13 @@ fun HomeNavGraph(navController: NavHostController, snackbarHostState: SnackbarHo
             )
         }
         composable(route = BottomBarScreens.Favorite.route) {}
-        composable(route = BottomBarScreens.Profile.route) {}
+        composable(route = BottomBarScreens.Profile.route) {
+            ProfileScreen(navigateToLogin = navigationActions.navigateToLogin)
+        }
+        loginNavGraph(
+            navigationActions = navigationActions,
+            viewModel = loginViewModel
+        )
         detailsNavGraph(
             navigationActions = navigationActions,
             context = context,
