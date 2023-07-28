@@ -70,6 +70,7 @@ fun HomeNavGraph(navController: NavHostController, snackbarHostState: SnackbarHo
                 }
             )
 
+            //TODO: fix bug showing snack-bar every time user go to the main screen after login
             LaunchedEffect(key1 = loginStatus) {
                 authViewModel.loginStatus()
                 if (loginStatus) {
@@ -123,7 +124,7 @@ fun HomeNavGraph(navController: NavHostController, snackbarHostState: SnackbarHo
         composable(route = BottomBarScreens.Profile.route) {
             val profileUiState by authViewModel.profileUiState.collectAsStateWithLifecycle()
 
-            Crossfade(targetState = profileUiState.isLoggedIn) {
+            Crossfade(targetState = profileUiState.isLoggedIn, label = "") {
                 when (it) {
                     true -> {
                         ProfileScreen(

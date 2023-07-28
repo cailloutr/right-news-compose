@@ -41,6 +41,17 @@ class AuthViewModel @Inject constructor(
     val signInUiState: StateFlow<SignInUiState> = _signInUiState.asStateFlow()
 
 
+    init {
+        if (isLoggedIn()) {
+            _profileUiState.update {
+                it.copy(
+                    profilePicture = getCurrentUser()?.photoUrl.toString(),
+                    username = getCurrentUser()?.email.toString(),
+                )
+            }
+        }
+    }
+
     fun getCurrentUser() = authenticationRepository.getUser()
 
     fun signIn(user: User) {
