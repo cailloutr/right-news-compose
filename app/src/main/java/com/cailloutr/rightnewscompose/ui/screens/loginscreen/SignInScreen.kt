@@ -26,7 +26,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -56,138 +55,105 @@ import androidx.compose.ui.unit.dp
 import com.cailloutr.rightnewscompose.R
 import com.cailloutr.rightnewscompose.ui.components.SmallAppBar
 import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
+import com.cailloutr.rightnewscompose.ui.uistate.SignInUiState
 import com.cailloutr.rightnewscompose.util.PhoneNumberVisualTransformation
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun SignInScreen(
+    uiState: SignInUiState,
+    onEmailValueChange: (String) -> Unit,
+    onPasswordValueChange: (String) -> Unit,
+    onPhoneValueChange: (String) -> Unit,
+    onConfirmPasswordValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     navigateUp: () -> Unit,
+    signIn: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
-
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
-
     val appBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-
-    var email by remember() {
-        mutableStateOf("")
-    }
-
-    var password by remember() {
-        mutableStateOf("")
-    }
-
-    var phone by remember() {
-        mutableStateOf("")
-    }
-
-    var confirmPassword by remember() {
-        mutableStateOf("")
-    }
-
-    val confirmPasswordSupportingText by remember() {
-        mutableStateOf("")
-    }
-
-    val passwordSupportingText by remember() {
-        mutableStateOf("")
-    }
-
-    val emailSupportingText by remember() {
-        mutableStateOf("")
-    }
-
-    val phoneSupportingText by remember() {
-        mutableStateOf("")
-    }
-
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
 
     var passwordVisible by remember() {
         mutableStateOf(false)
     }
 
-
-    val isError by remember {
-        mutableStateOf(false)
-    }
-
-    val keyboardController = LocalSoftwareKeyboardController.current
-
-    val focusManager = LocalFocusManager.current
-
     SignInScreen(
         scrollState = scrollState,
-        snackbarHostState = snackbarHostState,
         appBarScrollBehavior = appBarScrollBehavior,
         keyboardController = keyboardController,
         navigateUp = {
             navigateUp()
         },
-        email = email,
         modifier = modifier,
-        password = password,
-        phone = phone,
-        confirmPassword = confirmPassword,
-        confirmPasswordSupportingText = confirmPasswordSupportingText,
-        passwordSupportingText = passwordSupportingText,
-        emailSupportingText = emailSupportingText,
-        phoneSupportingText = phoneSupportingText,
-        passwordVisible = passwordVisible,
-        isError = isError,
-        onPasswordValueChange = { value ->
-            password = value
-        },
+        email = uiState.email,
         onEmailValueChange = { value ->
-            email = value
+            onEmailValueChange(value)
         },
-        onPhoneValueChange = {value ->
-            phone = value
+        emailError = uiState.emailError,
+        password = uiState.password,
+        onPasswordValueChange = { value ->
+            onPasswordValueChange(value)
         },
+        passwordError = uiState.passwordError,
+        passwordSupportingText = uiState.passwordSupportingText,
+        confirmPassword = uiState.confirmPassword,
+        onConfirmPasswordValueChange = { value ->
+            onConfirmPasswordValueChange(value)
+        },
+        confirmPasswordError = uiState.confirmPasswordError,
+        confirmPasswordSupportingText = uiState.confirmPasswordSupportingText,
+        phone = uiState.phone,
+        onPhoneValueChange = { value ->
+            onPhoneValueChange(value)
+        },
+        phoneError = uiState.phoneError,
+        emailSupportingText = uiState.emailSupportingText,
+        phoneSupportingText = uiState.phoneSupportingText,
+        passwordVisible = passwordVisible,
         onPasswordVisibilityChange = {
             passwordVisible = !passwordVisible
-        },
-        onConfirmPasswordValueChange = {value ->
-            confirmPassword = value
         },
         keyboardActionOnNext = {
             focusManager.moveFocus(FocusDirection.Down)
         },
         keyboardActionOnDone = {
             focusManager.clearFocus()
-        }
+        },
+        signIn = { signIn() }
     )
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun SignInScreen(
     scrollState: ScrollState,
-    snackbarHostState: SnackbarHostState,
     appBarScrollBehavior: TopAppBarScrollBehavior,
     modifier: Modifier = Modifier,
     navigateUp: () -> Unit = {},
     email: String = "",
-    password: String = "",
-    phone: String = "",
-    confirmPassword: String = "",
-    confirmPasswordSupportingText: String = "",
-    emailSupportingText: String = "",
-    passwordSupportingText: String = "",
-    phoneSupportingText: String = "",
-    passwordVisible: Boolean = false,
-    onPasswordVisibilityChange: (Boolean) -> Unit = {},
     onEmailValueChange: (String) -> Unit = {},
+    emailSupportingText: String = "",
+    password: String = "",
     onPasswordValueChange: (String) -> Unit = {},
+    passwordSupportingText: String = "",
+    onPasswordVisibilityChange: (Boolean) -> Unit = {},
+    passwordVisible: Boolean = false,
+    confirmPassword: String = "",
     onConfirmPasswordValueChange: (String) -> Unit = {},
+    confirmPasswordSupportingText: String = "",
+    phone: String = "",
     onPhoneValueChange: (String) -> Unit = {},
+    phoneError: Boolean = false,
+    phoneSupportingText: String = "",
     keyboardActionOnNext: () -> Unit = {},
     keyboardActionOnDone: () -> Unit = {},
     keyboardController: SoftwareKeyboardController?,
-    isError: Boolean = false,
+    passwordError: Boolean = false,
+    confirmPasswordError: Boolean = false,
+    emailError: Boolean = false,
+    signIn: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -226,7 +192,7 @@ fun SignInScreen(
                             keyboardActionOnNext()
                         }
                     ),
-                    isError = isError,
+                    isError = phoneError,
                     singleLine = true,
                     colors = TextFieldDefaults.colors(
                         focusedLeadingIconColor = MaterialTheme.colorScheme.primary,
@@ -259,7 +225,7 @@ fun SignInScreen(
                             keyboardActionOnNext()
                         }
                     ),
-                    isError = isError,
+                    isError = emailError,
                     singleLine = true,
                     colors = TextFieldDefaults.colors(
                         focusedLeadingIconColor = MaterialTheme.colorScheme.primary,
@@ -304,7 +270,7 @@ fun SignInScreen(
                             keyboardActionOnNext()
                         }
                     ),
-                    isError = isError,
+                    isError = passwordError,
                     singleLine = true,
                     colors = TextFieldDefaults.colors(
                         focusedLeadingIconColor = MaterialTheme.colorScheme.primary,
@@ -354,7 +320,7 @@ fun SignInScreen(
                             keyboardController?.hide()
                         }
                     ),
-                    isError = isError,
+                    isError = confirmPasswordError,
                     singleLine = true,
                     colors = TextFieldDefaults.colors(
                         focusedLeadingIconColor = MaterialTheme.colorScheme.primary,
@@ -369,7 +335,9 @@ fun SignInScreen(
                 Spacer(modifier = Modifier.size(16.dp))
 
                 Button(
-                    onClick = { },
+                    onClick = {
+                        signIn()
+                    },
                     modifier = Modifier
                         .width(200.dp)
                 ) {
@@ -402,9 +370,6 @@ fun SignInScreen(
 @Composable
 fun SignInScreenPreview() {
     val scrollState = rememberScrollState()
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
 
     val appBarState = rememberTopAppBarState()
     val enterAlwaysScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(appBarState)
@@ -416,10 +381,10 @@ fun SignInScreenPreview() {
         Surface {
             SignInScreen(
                 scrollState = scrollState,
-                snackbarHostState = snackbarHostState,
                 appBarScrollBehavior = scrollBehavior,
                 phoneSupportingText = "",
                 keyboardController = keyboardController,
+                signIn = { }
             )
         }
     }
@@ -430,9 +395,6 @@ fun SignInScreenPreview() {
 @Composable
 fun DarkSignInScreenPreview() {
     val scrollState = rememberScrollState()
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
 
     val appBarState = rememberTopAppBarState()
     val enterAlwaysScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(appBarState)
@@ -444,10 +406,10 @@ fun DarkSignInScreenPreview() {
         Surface {
             SignInScreen(
                 scrollState = scrollState,
-                snackbarHostState = snackbarHostState,
                 appBarScrollBehavior = scrollBehavior,
                 phoneSupportingText = "",
                 keyboardController = keyboardController,
+                signIn = {}
             )
         }
     }

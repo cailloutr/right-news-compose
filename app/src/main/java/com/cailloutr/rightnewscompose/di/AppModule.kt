@@ -8,12 +8,17 @@ import com.cailloutr.rightnewscompose.data.remote.TheGuardianService
 import com.cailloutr.rightnewscompose.data.remote.TheGuardianServiceImpl
 import com.cailloutr.rightnewscompose.other.DefaultDispatchers
 import com.cailloutr.rightnewscompose.other.DispatchersProvider
+import com.cailloutr.rightnewscompose.repository.AuthenticationRepository
+import com.cailloutr.rightnewscompose.repository.AuthenticationRepositoryInterface
 import com.cailloutr.rightnewscompose.repository.NewsRepository
 import com.cailloutr.rightnewscompose.usecases.GetArticleByIdUseCase
 import com.cailloutr.rightnewscompose.usecases.GetNewsBySectionUseCase
 import com.cailloutr.rightnewscompose.usecases.GetSectionsUseCase
 import com.cailloutr.rightnewscompose.usecases.NewsUseCases
 import com.cailloutr.rightnewscompose.usecases.SearchNewsUseCase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -73,6 +78,14 @@ object AppModule {
         ).fallbackToDestructiveMigration().build()
 
     @Provides
+    @Singleton
+    fun providesFirebaseAuth(): FirebaseAuth = Firebase.auth
+
+    @Provides
+    @Singleton
+    fun provideAuthenticationRepository(firebaseAuth: FirebaseAuth): AuthenticationRepositoryInterface = AuthenticationRepository(firebaseAuth)
+
+    @Provides
     fun provideDispatchersProvider(dispatchers: DefaultDispatchers): DispatchersProvider =
         dispatchers
 
@@ -82,7 +95,7 @@ object AppModule {
             GetSectionsUseCase(repository),
             GetNewsBySectionUseCase(repository),
             GetArticleByIdUseCase(repository),
-            SearchNewsUseCase(repository)
+            SearchNewsUseCase(repository),
         )
     }
 }

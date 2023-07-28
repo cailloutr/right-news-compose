@@ -33,20 +33,21 @@ import androidx.compose.ui.unit.dp
 import com.cailloutr.rightnewscompose.R
 import com.cailloutr.rightnewscompose.ui.components.SettingsCard
 import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
+import com.cailloutr.rightnewscompose.ui.uistate.ProfileScreenUiState
 
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
-    isLogged: Boolean = false,
-    username: String = "",
-    location: String = "",
-    navigateToLogin: () -> Unit,
+    uiState: ProfileScreenUiState,
+    logout: () -> Unit = {},
 ) {
-    if (isLogged) {
-        UserProfileScreen(username = username, location = location, modifier = modifier)
-    } else {
-        NotLoggedScreen(modifier = modifier, navigateToLogin = { navigateToLogin() })
-    }
+
+    UserProfileScreen(
+        username = uiState.username,
+        location = uiState.userLocation,
+        logout = { logout() },
+        modifier = modifier
+    )
 }
 
 @Composable
@@ -205,7 +206,7 @@ fun NotLoggedScreenPrev() {
 @Composable
 fun ProfileScreenPreview() {
     RightNewsComposeTheme {
-        ProfileScreen(navigateToLogin = {})
+        ProfileScreen(uiState = ProfileScreenUiState(isLoggedIn = false))
     }
 }
 
@@ -213,6 +214,6 @@ fun ProfileScreenPreview() {
 @Composable
 fun DarkProfileScreenPreview() {
     RightNewsComposeTheme {
-        ProfileScreen(navigateToLogin = {})
+        ProfileScreen(uiState = ProfileScreenUiState(isLoggedIn = false))
     }
 }

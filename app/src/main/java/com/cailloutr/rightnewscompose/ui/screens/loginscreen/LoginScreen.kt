@@ -2,6 +2,7 @@ package com.cailloutr.rightnewscompose.ui.screens.loginscreen
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,12 +20,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -33,6 +35,7 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -43,6 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cailloutr.rightnewscompose.R
 import com.cailloutr.rightnewscompose.ui.theme.RightNewsComposeTheme
+import com.cailloutr.rightnewscompose.ui.uistate.LoginScreenUiState
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -50,29 +54,14 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     navigateToSignUpScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit,
+    onEmailValueChange: (String) -> Unit,
+    onPasswordValueChange: (String) -> Unit,
+    login: () -> Unit,
+    snackbarHostState: SnackbarHostState,
+    uiState: LoginScreenUiState,
 ) {
 
-    var email by remember() {
-        mutableStateOf("")
-    }
-
-    var password by remember() {
-        mutableStateOf("")
-    }
-
-    val emailSupportingText by remember() {
-        mutableStateOf("")
-    }
-
-    val passwordSupportingText by remember() {
-        mutableStateOf("")
-    }
-
     var passwordVisible by remember() {
-        mutableStateOf(false)
-    }
-
-    val isError by remember {
         mutableStateOf(false)
     }
 
@@ -80,59 +69,61 @@ fun LoginScreen(
 
     val focusManager = LocalFocusManager.current
 
-    LoginScreen(
-        email = email,
-        password = password,
-        emailSupportingText = emailSupportingText,
-        passwordSupportingText = passwordSupportingText,
-        passwordVisible = passwordVisible,
-        onPasswordVisibilityChange = {
-            passwordVisible = !passwordVisible
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
         },
-        onEmailValueChange = { value ->
-            email = value
-        },
-        onPasswordValueChange = { value ->
-            password = value
-        },
-        keyboardActionOnNext = {
-            focusManager.moveFocus(FocusDirection.Down)
-        },
-        keyboardActionOnDone = {
-            focusManager.clearFocus()
-        },
-        login = { _, _ ->
-
-        },
-        navigateToSignUpScreen = {
-            navigateToSignUpScreen()
-        },
-
-        navigateToHomeScreen = { navigateToHomeScreen() },
-        keyboardController = keyboardController,
-        isError = isError
-    )
+        modifier = modifier
+    ) { paddingValues ->
+        Box(modifier = Modifier.padding(paddingValues)) {
+            LoginScreen(
+                uiState = uiState,
+                passwordVisible = passwordVisible,
+                onPasswordVisibilityChange = {
+                    passwordVisible = !passwordVisible
+                },
+                onEmailValueChange = { value ->
+                    onEmailValueChange(value)
+                },
+                onPasswordValueChange = { value ->
+                    onPasswordValueChange(value)
+                },
+                keyboardActionOnNext = {
+                    focusManager.moveFocus(FocusDirection.Down)
+                },
+                keyboardActionOnDone = {
+                    focusManager.clearFocus()
+                },
+                login = { login() },
+                navigateToSignUpScreen = {
+                    navigateToSignUpScreen()
+                },
+                navigateToHomeScreen = { navigateToHomeScreen() },
+                keyboardController = keyboardController,
+                emailError = uiState.emailError,
+                passwordError = uiState.passwordError,
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    email: String = "",
-    password: String = "",
-    emailSupportingText: String = "",
-    passwordSupportingText: String = "",
+    uiState: LoginScreenUiState,
     passwordVisible: Boolean = false,
     onPasswordVisibilityChange: (Boolean) -> Unit = {},
     onEmailValueChange: (String) -> Unit = {},
     onPasswordValueChange: (String) -> Unit = {},
     keyboardActionOnNext: () -> Unit = {},
     keyboardActionOnDone: () -> Unit = {},
-    login: (String, String) -> Unit = { _, _ -> },
+    login: () -> Unit = { },
     navigateToSignUpScreen: () -> Unit = {},
     navigateToHomeScreen: () -> Unit = {},
     keyboardController: SoftwareKeyboardController?,
-    isError: Boolean = false,
+    emailError: Boolean = false,
+    passwordError: Boolean = false,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -158,7 +149,7 @@ fun LoginScreen(
         Spacer(modifier = Modifier.size(30.dp))
 
         TextField(
-            value = email,
+            value = uiState.email,
             onValueChange = { email -> onEmailValueChange(email) },
             label = {
                 Text(text = stringResource(R.string.email))
@@ -175,14 +166,14 @@ fun LoginScreen(
                     keyboardActionOnNext()
                 }
             ),
-            isError = isError,
+            isError = emailError,
             singleLine = true,
             colors = TextFieldDefaults.colors(
                 focusedLeadingIconColor = MaterialTheme.colorScheme.primary,
                 focusedLabelColor = MaterialTheme.colorScheme.primary,
             ),
             supportingText = {
-                Text(text = emailSupportingText)
+                Text(text = uiState.emailSupportingText)
             },
             modifier = Modifier.fillMaxWidth()
         )
@@ -190,7 +181,7 @@ fun LoginScreen(
         Spacer(modifier = Modifier.size(26.dp))
 
         TextField(
-            value = password,
+            value = uiState.password,
             onValueChange = { password -> onPasswordValueChange(password) },
             label = {
                 Text(text = stringResource(R.string.password))
@@ -205,7 +196,11 @@ fun LoginScreen(
                 else painterResource(id = R.drawable.ic_visibility_off_24)
 
                 // Description for accessibility services
-                val description = if (passwordVisible) "Hide password" else "Show password"
+                val description =
+                    if (passwordVisible)
+                        stringResource(R.string.hide_password)
+                    else
+                        stringResource(R.string.show_password)
 
                 IconButton(onClick = { onPasswordVisibilityChange(passwordVisible) }) {
                     Icon(painter = image, description)
@@ -221,14 +216,14 @@ fun LoginScreen(
                     keyboardController?.hide()
                 }
             ),
-            isError = isError,
+            isError = passwordError,
             singleLine = true,
             colors = TextFieldDefaults.colors(
                 focusedLeadingIconColor = MaterialTheme.colorScheme.primary,
                 focusedLabelColor = MaterialTheme.colorScheme.primary,
             ),
             supportingText = {
-                Text(text = passwordSupportingText)
+                Text(text = uiState.passwordSupportingText)
             },
             modifier = Modifier.fillMaxWidth()
         )
@@ -236,9 +231,12 @@ fun LoginScreen(
         Spacer(modifier = Modifier.size(26.dp))
 
         Button(
-            onClick = { login(email, password) },
+            onClick = {
+                login()
+            },
             modifier = Modifier
                 .width(200.dp)
+                .testTag("login_button")
         ) {
             Text(
                 text = stringResource(id = R.string.login),
@@ -282,7 +280,7 @@ fun LoginScreenPreview() {
     val keyboardController = LocalSoftwareKeyboardController.current
     RightNewsComposeTheme {
         Surface {
-            LoginScreen(keyboardController = keyboardController)
+            LoginScreen(keyboardController = keyboardController, uiState = LoginScreenUiState())
         }
     }
 }
@@ -294,7 +292,7 @@ fun DarkLoginScreenPreview() {
     val keyboardController = LocalSoftwareKeyboardController.current
     RightNewsComposeTheme {
         Surface {
-            LoginScreen(keyboardController = keyboardController)
+            LoginScreen(keyboardController = keyboardController, uiState = LoginScreenUiState())
         }
     }
 }

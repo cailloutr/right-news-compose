@@ -3,6 +3,13 @@ package com.cailloutr.rightnewscompose.navigation
 import androidx.navigation.NavController
 
 class RightNewsNavigationActions(navController: NavController) {
+    val navigateToNotLoggedScreen: () -> Unit = {
+        val route = BottomBarScreens.Profile.route
+        navController.navigate(route) {
+            popUpTo(route) { inclusive = true }
+        }
+    }
+
     val navigateToSearchNewsScreen: () -> Unit = {
         val route = SearchNewsScreen.Search.route
         navController.navigate(route)
@@ -34,6 +41,11 @@ class RightNewsNavigationActions(navController: NavController) {
     }
 
     val navigateToMainScreen: () -> Unit = {
+        val route = BottomBarScreens.Main.route
+        navController.navigate(route)
+    }
+
+    val navigateToMainScreenWithArgs: () -> Unit = {
         val route = BottomBarScreens.Main.route
         navController.navigate(route)
     }

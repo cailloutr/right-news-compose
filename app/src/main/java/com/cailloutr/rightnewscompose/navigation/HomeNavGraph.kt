@@ -2,6 +2,7 @@ package com.cailloutr.rightnewscompose.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.Crossfade
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.SnackbarDuration
@@ -21,9 +22,10 @@ import com.cailloutr.rightnewscompose.R
 import com.cailloutr.rightnewscompose.other.Status
 import com.cailloutr.rightnewscompose.other.getNetworkMessage
 import com.cailloutr.rightnewscompose.ui.screens.mainscreen.MainScreen
+import com.cailloutr.rightnewscompose.ui.screens.profilescreen.NotLoggedScreen
 import com.cailloutr.rightnewscompose.ui.screens.profilescreen.ProfileScreen
 import com.cailloutr.rightnewscompose.ui.viewmodel.AllSectionsViewModel
-import com.cailloutr.rightnewscompose.ui.viewmodel.LoginViewModel
+import com.cailloutr.rightnewscompose.ui.viewmodel.AuthViewModel
 import com.cailloutr.rightnewscompose.ui.viewmodel.NewsViewModel
 import kotlinx.coroutines.launch
 
@@ -33,8 +35,7 @@ import kotlinx.coroutines.launch
 fun HomeNavGraph(navController: NavHostController, snackbarHostState: SnackbarHostState) {
 
     val allSectionsViewModel = hiltViewModel<AllSectionsViewModel>()
-    val loginViewModel = hiltViewModel<LoginViewModel>()
-//    val latestNewsViewModel = hiltViewModel<LatestNewsViewModel>()
+    val authViewModel = hiltViewModel<AuthViewModel>()
 
     val navigationActions = RightNewsNavigationActions(navController)
     val context = LocalContext.current
@@ -47,14 +48,17 @@ fun HomeNavGraph(navController: NavHostController, snackbarHostState: SnackbarHo
     ) {
         composable(route = BottomBarScreens.Main.route) {
 
-            val viewModel = hiltViewModel<NewsViewModel>()
-            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            val newsViewModel = hiltViewModel<NewsViewModel>()
+
+            val uiState by newsViewModel.uiState.collectAsStateWithLifecycle()
             val scope = rememberCoroutineScope()
+
+            val loginStatus by authViewModel.isLoggedIn.collectAsStateWithLifecycle(initialValue = false)
 
             val pullRefreshState = rememberPullRefreshState(
                 refreshing = uiState.isRefreshingAll,
                 onRefresh = {
-                    viewModel.refreshData() { response ->
+                    newsViewModel.refreshData() { response ->
                         val message: Int? = response.status.getNetworkMessage()
 
                         scope.launch {
@@ -66,9 +70,18 @@ fun HomeNavGraph(navController: NavHostController, snackbarHostState: SnackbarHo
                 }
             )
 
+            LaunchedEffect(key1 = loginStatus) {
+                authViewModel.loginStatus()
+                if (loginStatus) {
+                    scope.launch {
+                        snackbarHostState.showSnackbar("Logged in Successfully")
+                    }
+                }
+            }
+
             LaunchedEffect(key1 = Unit) {
                 scope.launch {
-                    viewModel.refreshData()
+                    newsViewModel.refreshData()
                 }
             }
 
@@ -88,8 +101,8 @@ fun HomeNavGraph(navController: NavHostController, snackbarHostState: SnackbarHo
                     navigationActions.navigateToSearchNewsScreen()
                 },
                 onSectionSelectedListener = { id, _ ->
-                    viewModel.setSelectedSection(id)
-                    viewModel.getNewsBySection { response ->
+                    newsViewModel.setSelectedSection(id)
+                    newsViewModel.getNewsBySection { response ->
                         when (response.status) {
                             Status.ERROR -> {
                                 scope.launch {
@@ -108,11 +121,28 @@ fun HomeNavGraph(navController: NavHostController, snackbarHostState: SnackbarHo
         }
         composable(route = BottomBarScreens.Favorite.route) {}
         composable(route = BottomBarScreens.Profile.route) {
-            ProfileScreen(navigateToLogin = navigationActions.navigateToLogin)
+            val profileUiState by authViewModel.profileUiState.collectAsStateWithLifecycle()
+
+            Crossfade(targetState = profileUiState.isLoggedIn) {
+                when (it) {
+                    true -> {
+                        ProfileScreen(
+                            uiState = profileUiState,
+                            logout = {
+                                authViewModel.logout()
+                            }
+                        )
+                    }
+
+                    false -> {
+                        NotLoggedScreen(navigateToLogin = { navigationActions.navigateToLogin() })
+                    }
+                }
+            }
         }
-        loginNavGraph(
+        authNavGraph(
             navigationActions = navigationActions,
-            viewModel = loginViewModel
+            authViewModel = authViewModel,
         )
         detailsNavGraph(
             navigationActions = navigationActions,
